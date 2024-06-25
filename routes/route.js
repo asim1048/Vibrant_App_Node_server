@@ -4,7 +4,7 @@ import express from 'express';
 import { signUp,sendOTpForSignUp,sendOTpForForgotPassword, logIn,userInfoByID, updatePassword, checkUser, usersList, deleteUser } from '../controller/user-controller.js';
 
 //Boulevard
-import { getlocationAppointments,cancelAppointment,getAvailableRescheduleDates,getAvailableRescheduleTimes,rescheduleAppointment,getlocations,getAppoinmentManageURL,locationServices,createAppoinmentCart,addClientInfoToAppoinmentCart,addItemtoAppoinmentCart ,appointmentAvailableTimeSlots,addSelectedTimeToCart,addPaymentMethodToAppoinmentCart,addPaymentTokenToCart,checkoutAppoinmentCart} from '../controller/Boulevard-controller.js';
+import { getlocationAppointments,cancelAppointment,getAvailableRescheduleDates,getAvailableRescheduleTimes,rescheduleAppointment,appoinmentCheckinArrived,getlocations,getAppoinmentManageURL,locationServices,createAppoinmentCart,addClientInfoToAppoinmentCart,addItemtoAppoinmentCart ,appointmentAvailableTimeSlots,addSelectedTimeToCart,addPaymentMethodToAppoinmentCart,addPaymentTokenToCart,checkoutAppoinmentCart} from '../controller/Boulevard-controller.js';
 import {createCartforUser, sendOTPforLoginViaNumber ,sendOTPforLoginViaEmail,verifyLoginUsingOTP,createClient} from '../controller/Boulevard-controller.js';
 
 //Token
@@ -102,6 +102,7 @@ route.post('/cancelAppointment', cancelAppointment)
 route.post('/getAvailableRescheduleDates', getAvailableRescheduleDates)
 route.post('/getAvailableRescheduleTimes', getAvailableRescheduleTimes)
 route.post('/rescheduleAppointment', rescheduleAppointment)
+route.post('/appoinmentCheckinArrived', appoinmentCheckinArrived)
 route.get('/getlocations', getlocations)
 route.post('/getAppoinmentManageURL', getAppoinmentManageURL)
 route.post('/locationServices', locationServices)
