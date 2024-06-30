@@ -5,8 +5,8 @@ import { signUp,sendOTpForSignUp,sendOTpForForgotPassword, logIn,userInfoByID, u
 
 //Boulevard
 import { getlocationAppointments,cancelAppointment,getAvailableRescheduleDates,getAvailableRescheduleTimes,rescheduleAppointment,appoinmentCheckinArrived,getlocations,getAppoinmentManageURL,locationServices,createAppoinmentCart,addClientInfoToAppoinmentCart,addItemtoAppoinmentCart ,appointmentAvailableTimeSlots,addSelectedTimeToCart,addPaymentMethodToAppoinmentCart,addPaymentTokenToCart,checkoutAppoinmentCart} from '../controller/Boulevard-controller.js';
-import {createCartforUser, sendOTPforLoginViaNumber ,sendOTPforLoginViaEmail,verifyLoginUsingOTP,createClient} from '../controller/Boulevard-controller.js';
-
+import {createCartforUser, sendOTPforLoginViaNumber ,sendOTPforLoginViaEmail,verifyLoginUsingOTP,createClient,getClientInfo} from '../controller/Boulevard-controller.js';
+import { cartItemswithAdons ,getStafsList,addStaffToCart} from '../controller/Boulevard-controller.js';
 //Token
 import { addToken } from '../controller/device-token-controller.js';
 
@@ -116,6 +116,9 @@ route.post('/addSelectedTimeToCart', addSelectedTimeToCart)
 route.post('/addPaymentMethodToAppoinmentCart', addPaymentMethodToAppoinmentCart)
 route.post('/addPaymentTokenToCart', addPaymentTokenToCart)
 route.post('/checkoutAppoinmentCart', checkoutAppoinmentCart)
+route.post('/cartItemswithAdons', cartItemswithAdons)
+route.post('/getStafsList', getStafsList)
+route.post('/addStaffToCart', addStaffToCart);
 
 
 //User Auth Boulevard
@@ -126,6 +129,7 @@ route.post('/sendOTPforLoginViaEmail', sendOTPforLoginViaEmail)
 route.post('/verifyLoginUsingOTP', verifyLoginUsingOTP)
 //For signup Blb
 route.post('/createClient', createClient)
+route.post('/getClientInfo', getClientInfo)
 
 
 

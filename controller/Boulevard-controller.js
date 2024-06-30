@@ -75,6 +75,7 @@ export const getlocationAppointments = async (req, res) => {
                             node {
                                 id
                                 clientId
+                                state
                                 client {
                                     name
                                     createdAt
@@ -134,7 +135,8 @@ export const getlocationAppointments = async (req, res) => {
                     client: appointment.client,
                     services: appointment.appointmentServices,
                     clientid: appointment.clientId,
-                    id: appointment.id
+                    id: appointment.id,
+                    state: appointment.state
                 }));
 
                 // Now `simplifiedAppointments` contains the array of simplified appointment nodes
@@ -751,6 +753,248 @@ export const createAppoinmentCart = async (req, res) => {
                     message: "Cart Created successfully",
                     data: parsedData
                 };
+                return res.status(200).send(ress);
+            } catch (parseError) {
+                let ress = {
+                    status: false,
+                    message: "Failed to parse response",
+                    error: parseError.message
+                };
+                return res.status(500).json(ress);
+            }
+        });
+    } catch (error) {
+        console.log(error);
+        let ress = {
+            status: false,
+            message: "Something went wrong in the backend",
+            error: error,
+        };
+        return res.status(500).json(ress);
+    }
+};
+export const cartItemswithAdons = async (req, res) => {
+    try {
+        const { cartid } = req.body;
+
+    
+        const query = `query GetCart($id: ID!) {
+            cart(id: $id) {
+                id
+                selectedItems {
+                    id
+                    addons {
+                        id
+                        name
+                        description
+                        listPriceRange {
+                            min 
+                            max 
+                        }
+                    }
+                }
+            }
+        }`;
+          
+        const variables = { id: cartid };
+        const options = {
+            method: 'POST',
+            url: `https://dashboard.boulevard.io/api/2020-01/${BUSINESS_ID}/client`,
+            headers: {
+                'Authorization': generateAuthClientHeaderToken(),
+                'Content-Type': 'application/json',
+                'Cookie': '_sched_cookie=QTEyOEdDTQ.mHsjUNLA3eGUf6OmzUPJlNoEg227-wXF8K5Cb2FDnd5BWY7-PPIQNqdoe4g.NQZg_DkYRfNNTnUt.lS9dUheX7017zTzgniU528Sy5i5a-btIbuUHVfAwFkk_fKzLSuC2qCO1EyR-8thrXff1.u_QbKX6kddDkOr8fS2oY2g'
+            },
+            body: JSON.stringify({
+                query,
+                variables,
+              }),
+        };
+        request(options, function (error, response) {
+            if (error) {
+                console.log("error", error)
+                let ress = {
+                    status: false,
+                    message: "Failed to create cart",
+                    error: error,
+                };
+                return res.status(200).json(ress);
+            }
+
+            try {
+                // Step 1: Parse the JSON string inside the response body
+                const parsedData = JSON.parse(response.body);
+
+                // Step 2: Navigate to the appointments array
+
+
+                // Now `simplifiedAppointments` contains the array of simplified appointment nodes
+                let ress = {
+                    status: true,
+                    message: "Cart Created successfully",
+                    data: parsedData
+                };
+                return res.status(200).send(ress);
+            } catch (parseError) {
+                let ress = {
+                    status: false,
+                    message: "Failed to parse response",
+                    error: parseError.message
+                };
+                return res.status(500).json(ress);
+            }
+        });
+    } catch (error) {
+        console.log(error);
+        let ress = {
+            status: false,
+            message: "Something went wrong in the backend",
+            error: error,
+        };
+        return res.status(500).json(ress);
+    }
+};
+export const getStafsList = async (req, res) => {
+    try {
+
+        const { bookableTimeId, id, itemId, locationId } = req.body;
+
+
+        const gqlQuery = `
+            query GetCartBookableStaffVariants($bookableTimeId: ID!, $id: ID!, $itemId: ID!, $locationId: ID) {
+              cartBookableStaffVariants(bookableTimeId: $bookableTimeId, id: $id, itemId: $itemId, locationId: $locationId) {
+               duration
+                id
+                price 
+                staff {
+                  id
+                  avatar
+                  displayName
+                }
+              }
+            }
+        `;
+
+        const variables = { bookableTimeId, id, itemId, locationId };
+
+
+        const options = {
+            method: 'POST',
+            url: `https://dashboard.boulevard.io/api/2020-01/${BUSINESS_ID}/client`,
+            headers: {
+                'Authorization': generateAuthClientHeaderToken(),
+                'Content-Type': 'application/json',
+                'Cookie': '_sched_cookie=QTEyOEdDTQ.mHsjUNLA3eGUf6OmzUPJlNoEg227-wXF8K5Cb2FDnd5BWY7-PPIQNqdoe4g.NQZg_DkYRfNNTnUt.lS9dUheX7017zTzgniU528Sy5i5a-btIbuUHVfAwFkk_fKzLSuC2qCO1EyR-8thrXff1.u_QbKX6kddDkOr8fS2oY2g'
+            },
+            body: JSON.stringify({
+                query: gqlQuery,
+                variables,
+            }),
+        };
+
+        request(options, function (error, response) {
+            if (error) {
+                console.log("error", error)
+                let ress = {
+                    status: false,
+                    message: "Failed to fetch appointments",
+                };
+                return res.status(200).json(ress);
+            }
+
+            try {
+                // Step 1: Parse the JSON string inside the response body
+                const parsedData = JSON.parse(response.body);
+
+                // Step 2: Navigate to the appointments array
+              //  const appointments = parsedData.data.appointments.edges.map(edge => edge.node);
+
+                
+
+                // Now `simplifiedAppointments` contains the array of simplified appointment nodes
+                let ress = {
+                    status: true,
+                    message: "Staffs fetched successfully",
+                    data: parsedData
+                };
+                console.log("ress", ress);
+                return res.status(200).send(ress);
+            } catch (parseError) {
+                let ress = {
+                    status: false,
+                    message: "Failed to parse response",
+                    error: parseError.message
+                };
+                return res.status(500).json(ress);
+            }
+        });
+    } catch (error) {
+        console.log(error);
+        let ress = {
+            status: false,
+            message: "Something went wrong in the backend",
+            error: error,
+        };
+        return res.status(500).json(ress);
+    }
+};
+export const addStaffToCart = async (req, res) => {
+    try {
+        const { itemStaffVariantId, id, itemId } = req.body;
+
+
+        const mutation = `
+        mutation {
+            addCartSelectedBookableItem(input: {
+                id: "${id}",
+                itemId: "${itemId}",
+                itemStaffVariantId: "${itemStaffVariantId}"
+            }) {
+                cart {
+                    id
+                }
+            }
+        }`;
+
+
+        const options = {
+            method: 'POST',
+            url: `https://dashboard.boulevard.io/api/2020-01/${BUSINESS_ID}/client`,
+            headers: {
+                'Authorization': generateAuthClientHeaderToken(),
+                'Content-Type': 'application/json',
+                'Cookie': '_sched_cookie=QTEyOEdDTQ.mHsjUNLA3eGUf6OmzUPJlNoEg227-wXF8K5Cb2FDnd5BWY7-PPIQNqdoe4g.NQZg_DkYRfNNTnUt.lS9dUheX7017zTzgniU528Sy5i5a-btIbuUHVfAwFkk_fKzLSuC2qCO1EyR-8thrXff1.u_QbKX6kddDkOr8fS2oY2g'
+            },
+            body: JSON.stringify({ query: mutation })
+
+        };
+
+        request(options, function (error, response) {
+            if (error) {
+                console.log("error", error)
+                let ress = {
+                    status: false,
+                    message: "Failed to fetch appointments",
+                };
+                return res.status(200).json(ress);
+            }
+
+            try {
+                // Step 1: Parse the JSON string inside the response body
+                const parsedData = JSON.parse(response.body);
+
+                // Step 2: Navigate to the appointments array
+              //  const appointments = parsedData.data.appointments.edges.map(edge => edge.node);
+
+                
+
+                // Now `simplifiedAppointments` contains the array of simplified appointment nodes
+                let ress = {
+                    status: true,
+                    message: "Staffs fetched successfully",
+                    data: parsedData
+                };
+                console.log("ress", ress);
                 return res.status(200).send(ress);
             } catch (parseError) {
                 let ress = {
@@ -1758,5 +2002,82 @@ export const createClient = async (req, res) => {
             error: error.message,
         };
         return res.status(500).json(ress);
+    }
+};
+
+export const getClientInfo = async (req, res) => {
+    const { email } = req.body;
+
+    if (!email) {
+        return res.status(400).json({
+            status: false,
+            message: "Email is required",
+        });
+    }
+
+    try {
+        const query = `
+        query {
+            clients(first: 1, query: "email = '${email}'") {
+                edges {
+                    node {
+                        id
+                        email
+                        name
+                        mobilePhone
+                        active
+                        externalId
+                        primaryLocation {
+                            id
+                            name
+                        }
+                        createdAt
+                        updatedAt
+                    }
+                }
+                pageInfo {
+                    hasNextPage
+                    hasPreviousPage
+                    startCursor
+                    endCursor
+                }
+            }
+        }`;
+
+        const options = {
+            method: 'POST',
+            url: `https://dashboard.boulevard.io/api/2020-01/admin`,
+            headers: {
+                'Authorization': generateAuthToken(),
+                'Content-Type': 'application/json',
+                'Cookie': '_sched_cookie=QTEyOEdDTQ.mHsjUNLA3eGUf6OmzUPJlNoEg227-wXF8K5Cb2FDnd5BWY7-PPIQNqdoe4g.NQZg_DkYRfNNTnUt.lS9dUheX7017zTzgniU528Sy5i5a-btIbuUHVfAwFkk_fKzLSuC2qCO1EyR-8thrXff1.u_QbKX6kddDkOr8fS2oY2g'
+            },
+            body: JSON.stringify({ query })
+        };
+
+        request(options, function (error, response) {
+            if (error) {
+                return res.status(500).json({
+                    status: false,
+                    message: "Failed to fetch clients",
+                    error: error
+                });
+            }
+
+            const responseBody = JSON.parse(response.body);
+            
+            return res.status(200).json({
+                status: true,
+                message: "Clients fetched successfully",
+                data: responseBody
+            });
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            status: false,
+            message: "Something went wrong in the backend",
+            error: error,
+        });
     }
 };
