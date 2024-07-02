@@ -473,7 +473,7 @@ export const appoinmentCheckinArrived = async (req, res) => {
             }
           }
         }`;
-    
+
         const variables = {
             input: {
                 id,
@@ -508,7 +508,7 @@ export const appoinmentCheckinArrived = async (req, res) => {
                 const parsedData = JSON.parse(response.body);
 
                 // Step 2: Navigate to the appointments array
-               
+
                 // Now `simplifiedAppointments` contains the array of simplified appointment nodes
                 let ress = {
                     status: true,
@@ -710,6 +710,10 @@ export const createAppoinmentCart = async (req, res) => {
                     availableItems {
                         id
                         name
+                        listPriceRange{
+                        min 
+                        max
+                        }
                     }
                 }
             }
@@ -777,7 +781,7 @@ export const cartItemswithAdons = async (req, res) => {
     try {
         const { cartid } = req.body;
 
-    
+
         const query = `query GetCart($id: ID!) {
             cart(id: $id) {
                 id
@@ -795,7 +799,7 @@ export const cartItemswithAdons = async (req, res) => {
                 }
             }
         }`;
-          
+
         const variables = { id: cartid };
         const options = {
             method: 'POST',
@@ -808,7 +812,7 @@ export const cartItemswithAdons = async (req, res) => {
             body: JSON.stringify({
                 query,
                 variables,
-              }),
+            }),
         };
         request(options, function (error, response) {
             if (error) {
@@ -907,9 +911,9 @@ export const getStafsList = async (req, res) => {
                 const parsedData = JSON.parse(response.body);
 
                 // Step 2: Navigate to the appointments array
-              //  const appointments = parsedData.data.appointments.edges.map(edge => edge.node);
+                //  const appointments = parsedData.data.appointments.edges.map(edge => edge.node);
 
-                
+
 
                 // Now `simplifiedAppointments` contains the array of simplified appointment nodes
                 let ress = {
@@ -984,9 +988,9 @@ export const addStaffToCart = async (req, res) => {
                 const parsedData = JSON.parse(response.body);
 
                 // Step 2: Navigate to the appointments array
-              //  const appointments = parsedData.data.appointments.edges.map(edge => edge.node);
+                //  const appointments = parsedData.data.appointments.edges.map(edge => edge.node);
 
-                
+
 
                 // Now `simplifiedAppointments` contains the array of simplified appointment nodes
                 let ress = {
@@ -1017,7 +1021,7 @@ export const addStaffToCart = async (req, res) => {
 };
 export const addClientInfoToAppoinmentCart = async (req, res) => {
     try {
-        const { cartId,clientInformation } = req.body;
+        const { cartId, clientInformation } = req.body;
 
 
         const query = `
@@ -1321,7 +1325,7 @@ export const addPaymentMethodToAppoinmentCart = async (req, res) => {
         const tokenizationUrl = 'https://vault-sandbox.joinblvd.com/cards/tokenize';
         const tokenizationResponse = await axios.post(tokenizationUrl, { card: cardDetails });
         const dataa = tokenizationResponse.data;
-        console.log("cardDetails",tokenizationResponse)
+        console.log("cardDetails", tokenizationResponse)
 
         let ress = {
             status: true,
@@ -1330,7 +1334,7 @@ export const addPaymentMethodToAppoinmentCart = async (req, res) => {
         };
         return res.status(200).send(ress);
 
-        
+
 
 
     } catch (error) {
@@ -1347,7 +1351,7 @@ export const addPaymentTokenToCart = async (req, res) => {
     try {
         const { paymentToken, cartId } = req.body;
 
-        
+
 
         const query = `mutation {
   addCartCardPaymentMethod(input: {
@@ -2065,7 +2069,7 @@ export const getClientInfo = async (req, res) => {
             }
 
             const responseBody = JSON.parse(response.body);
-            
+
             return res.status(200).json({
                 status: true,
                 message: "Clients fetched successfully",
