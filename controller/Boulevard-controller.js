@@ -2085,3 +2085,169 @@ export const getClientInfo = async (req, res) => {
         });
     }
 };
+
+
+//Memberships
+export const getMemberships = async (req, res) => {
+    try {
+        const query = `
+        query {
+            memberships(first: 20) {
+                edges {
+                    node {
+                        id
+                        locationId
+                        name
+                        status
+                        statusReason
+                        statusReasonCustom
+                        unitPrice
+                        vouchers{
+                        quantity
+                        services{
+                        id
+                        name
+                        defaultPrice
+                        description
+                        }
+                        }
+                    }
+                }
+                pageInfo {
+                    hasNextPage
+                    hasPreviousPage
+                    startCursor
+                    endCursor
+                }
+            }
+        }`;
+        const options = {
+            method: 'POST',
+            url: 'https://dashboard.boulevard.io/api/2020-01/admin',
+            headers: {
+                'Authorization': generateAuthToken(),
+                'Content-Type': 'application/json',
+                'Cookie': '_sched_cookie=QTEyOEdDTQ.mHsjUNLA3eGUf6OmzUPJlNoEg227-wXF8K5Cb2FDnd5BWY7-PPIQNqdoe4g.NQZg_DkYRfNNTnUt.lS9dUheX7017zTzgniU528Sy5i5a-btIbuUHVfAwFkk_fKzLSuC2qCO1EyR-8thrXff1.u_QbKX6kddDkOr8fS2oY2g'
+            },
+            body: JSON.stringify({ query: query })
+
+        };
+
+        request(options, function (error, response) {
+            if (error) {
+                console.log("error", error)
+                let ress = {
+                    status: false,
+                    message: "Failed to fetch appointments",
+                };
+                return res.status(200).json(ress);
+            }
+
+            try {
+                // Step 1: Parse the JSON string inside the response body
+                const parsedData = JSON.parse(response.body);
+
+               
+                let ress = {
+                    status: true,
+                    message: "Memberships fetched successfully",
+                    data: parsedData
+                };
+                console.log("ress", ress);
+                return res.status(200).send(ress);
+            } catch (parseError) {
+                let ress = {
+                    status: false,
+                    message: "Failed to parse response",
+                    error: parseError.message
+                };
+                return res.status(500).json(ress);
+            }
+        });
+    } catch (error) {
+        console.log(error);
+        let ress = {
+            status: false,
+            message: "Something went wrong in the backend",
+            error: error,
+        };
+        return res.status(500).json(ress);
+    }
+};
+
+//services
+export const getServices = async (req, res) => {
+    try {
+        const query = `
+        query {
+            services(first: 20) {
+                edges {
+                    node {
+                        id
+                        active
+                        name
+                        description
+                        defaultPrice
+                    }
+                }
+                pageInfo {
+                    hasNextPage
+                    hasPreviousPage
+                    startCursor
+                    endCursor
+                }
+            }
+        }`;
+        const options = {
+            method: 'POST',
+            url: 'https://dashboard.boulevard.io/api/2020-01/admin',
+            headers: {
+                'Authorization': generateAuthToken(),
+                'Content-Type': 'application/json',
+                'Cookie': '_sched_cookie=QTEyOEdDTQ.mHsjUNLA3eGUf6OmzUPJlNoEg227-wXF8K5Cb2FDnd5BWY7-PPIQNqdoe4g.NQZg_DkYRfNNTnUt.lS9dUheX7017zTzgniU528Sy5i5a-btIbuUHVfAwFkk_fKzLSuC2qCO1EyR-8thrXff1.u_QbKX6kddDkOr8fS2oY2g'
+            },
+            body: JSON.stringify({ query: query })
+
+        };
+
+        request(options, function (error, response) {
+            if (error) {
+                console.log("error", error)
+                let ress = {
+                    status: false,
+                    message: "Failed to fetch appointments",
+                };
+                return res.status(200).json(ress);
+            }
+
+            try {
+                // Step 1: Parse the JSON string inside the response body
+                const parsedData = JSON.parse(response.body);
+
+               
+                let ress = {
+                    status: true,
+                    message: "Services fetched successfully",
+                    data: parsedData
+                };
+                console.log("ress", ress);
+                return res.status(200).send(ress);
+            } catch (parseError) {
+                let ress = {
+                    status: false,
+                    message: "Failed to parse response",
+                    error: parseError.message
+                };
+                return res.status(500).json(ress);
+            }
+        });
+    } catch (error) {
+        console.log(error);
+        let ress = {
+            status: false,
+            message: "Something went wrong in the backend",
+            error: error,
+        };
+        return res.status(500).json(ress);
+    }
+};

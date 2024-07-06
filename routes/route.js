@@ -7,6 +7,8 @@ import { signUp,sendOTpForSignUp,sendOTpForForgotPassword, logIn,userInfoByID, u
 import { getlocationAppointments,cancelAppointment,getAvailableRescheduleDates,getAvailableRescheduleTimes,rescheduleAppointment,appoinmentCheckinArrived,getlocations,getAppoinmentManageURL,locationServices,createAppoinmentCart,addClientInfoToAppoinmentCart,addItemtoAppoinmentCart ,appointmentAvailableTimeSlots,addSelectedTimeToCart,addPaymentMethodToAppoinmentCart,addPaymentTokenToCart,checkoutAppoinmentCart} from '../controller/Boulevard-controller.js';
 import {createCartforUser, sendOTPforLoginViaNumber ,sendOTPforLoginViaEmail,verifyLoginUsingOTP,createClient,getClientInfo} from '../controller/Boulevard-controller.js';
 import { cartItemswithAdons ,getStafsList,addStaffToCart} from '../controller/Boulevard-controller.js';
+import { getMemberships } from '../controller/Boulevard-controller.js';
+import { getServices } from '../controller/Boulevard-controller.js';
 //Token
 import { addToken } from '../controller/device-token-controller.js';
 
@@ -130,6 +132,15 @@ route.post('/verifyLoginUsingOTP', verifyLoginUsingOTP)
 //For signup Blb
 route.post('/createClient', createClient)
 route.post('/getClientInfo', getClientInfo)
+
+
+//Memberships
+route.get('/getMemberships', getMemberships)
+
+//services
+route.get('/getServices', getServices)
+
+
 
 
 
