@@ -101,6 +101,16 @@ export const getlocationAppointments = async (req, res) => {
                                         name
                                         id
                                     }
+                                     staff {
+            firstName
+            lastName
+            email
+            mobilePhone
+            
+            role {
+              name
+            }
+          }
                                 }
                             }
                         }
