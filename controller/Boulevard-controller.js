@@ -114,7 +114,6 @@ export const getlocationAppointments = async (req, res) => {
             lastName
             email
             mobilePhone
-            avator
             role {
               name
             }
@@ -141,6 +140,7 @@ export const getlocationAppointments = async (req, res) => {
 
             try {
                 // Step 1: Parse the JSON string inside the response body
+                console.log("response.body",response.body)
                 const parsedData = JSON.parse(response.body);
 
                 // Step 2: Navigate to the appointments array
