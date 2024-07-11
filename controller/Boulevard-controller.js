@@ -8,6 +8,7 @@ const API_KEY = 'c545e74b-5ddc-4ebc-b706-26073b2d04f1';
 const SECRET_KEY = 'ODFue3QbsLKGq+9g/ZXuzoGmQe6uBeqFVD/9pGi/b98=';
 const BUSINESS_ID = '49fcc618-b077-49cc-8666-3efc31348cac';
 let http_basic_header = "";
+let http_basic_header1=""
 const generateAuthClientHeaderToken = () => {
     // Concatenate the API_KEY with a colon
     const httpBasicPayload = `${API_KEY}:`;
@@ -43,6 +44,7 @@ const generateAuthTokenOneTime = () => {
 
     // Create HTTP Authorization header
     http_basic_header = `Basic ${http_basic_credentials}`;
+    http_basic_header1=http_basic_credentials;
 
 
 };
@@ -50,9 +52,15 @@ generateAuthTokenOneTime()
 const generateAuthToken = () => {
     return http_basic_header;
 }
-// console.log("http_basic_header", http_basic_header)
 
+const loyalityAuthToken=()=>{
+    const token=http_basic_header1;//admin Auth TOKEN
+    const basicPayload = ':' + token;
+        const basicCredentials = Buffer.from(basicPayload).toString('base64');
+        const authHeader = 'Basic ' + basicCredentials;
+    return authHeader;
 
+}
 
 
 export const getlocationAppointments = async (req, res) => {
@@ -106,7 +114,7 @@ export const getlocationAppointments = async (req, res) => {
             lastName
             email
             mobilePhone
-            
+            avator
             role {
               name
             }
@@ -2102,12 +2110,13 @@ export const getMemberships = async (req, res) => {
     try {
         const query = `
         query {
-            memberships(first: 20) {
+            memberships(first: 500) {
                 edges {
                     node {
                         id
                         locationId
                         name
+                        clientId
                         status
                         statusReason
                         statusReasonCustom
@@ -2161,6 +2170,199 @@ export const getMemberships = async (req, res) => {
                 let ress = {
                     status: true,
                     message: "Memberships fetched successfully",
+                    total:parsedData?.data?.memberships?.edges?.length,
+
+                    data: parsedData
+                };
+                console.log("ress", ress);
+                return res.status(200).send(ress);
+            } catch (parseError) {
+                let ress = {
+                    status: false,
+                    message: "Failed to parse response",
+                    error: parseError.message
+                };
+                return res.status(500).json(ress);
+            }
+        });
+    } catch (error) {
+        console.log(error);
+        let ress = {
+            status: false,
+            message: "Something went wrong in the backend",
+            error: error,
+        };
+        return res.status(500).json(ress);
+    }
+};
+export const getProducts = async (req, res) => {
+    try {
+        const query = `
+        query {
+            products(first: 500) {
+                edges {
+                    node {
+                        id
+                        barcode
+                        name
+                        brandName
+                        description
+                        active
+                        size
+                        taxable
+                        unitCost
+                        unitPrice
+                        vouchers{
+                        quantity
+                        services{
+                        id
+                        name
+                        defaultPrice
+                        }
+                        }
+                    }
+                }
+                pageInfo {
+                    hasNextPage
+                    hasPreviousPage
+                    startCursor
+                    endCursor
+                }
+            }
+        }`;
+
+        const options = {
+            method: 'POST',
+            url: 'https://dashboard.boulevard.io/api/2020-01/admin',
+            headers: {
+                'Authorization': generateAuthToken(),
+                'Content-Type': 'application/json',
+                'Cookie': '_sched_cookie=QTEyOEdDTQ.mHsjUNLA3eGUf6OmzUPJlNoEg227-wXF8K5Cb2FDnd5BWY7-PPIQNqdoe4g.NQZg_DkYRfNNTnUt.lS9dUheX7017zTzgniU528Sy5i5a-btIbuUHVfAwFkk_fKzLSuC2qCO1EyR-8thrXff1.u_QbKX6kddDkOr8fS2oY2g'
+            },
+            body: JSON.stringify({ query: query })
+
+        };
+
+        request(options, function (error, response) {
+            if (error) {
+                console.log("error", error)
+                let ress = {
+                    status: false,
+                    message: "Failed to fetch appointments",
+                };
+                return res.status(200).json(ress);
+            }
+
+            try {
+                // Step 1: Parse the JSON string inside the response body
+                const parsedData = JSON.parse(response.body);
+
+               
+                let ress = {
+                    status: true,
+                    message: "Products fetched successfully",
+                    total:parsedData?.data?.products?.edges?.length,
+                    data: parsedData
+                };
+                console.log("ress", ress);
+                return res.status(200).send(ress);
+            } catch (parseError) {
+                let ress = {
+                    status: false,
+                    message: "Failed to parse response",
+                    error: parseError.message
+                };
+                return res.status(500).json(ress);
+            }
+        });
+    } catch (error) {
+        console.log(error);
+        let ress = {
+            status: false,
+            message: "Something went wrong in the backend",
+            error: error,
+        };
+        return res.status(500).json(ress);
+    }
+};
+export const createMembershipOfUser = async (req, res) => {
+    try {
+
+        const { clientId, interval, name, startOn, unitPrice, vouchers } = req.body;
+
+
+            const mutation = `
+            mutation EnrollClient($input: EnrollClientInput!) {
+                enrollClient(input: $input) {
+                    client {
+                        id
+                        name
+                        memberships {
+                            id
+                            name
+                            startOn
+                            endOn
+                            status
+                            unitPrice
+                            vouchers {
+                                id
+                                code
+                            }
+                        }
+                    }
+                }
+            }`;
+    
+            const variables = {
+                input: {
+                    client: {
+                        id: clientId,
+                        name: name
+                    },
+                    interval: interval,
+                    startOn: startOn,
+                    unitPrice: unitPrice,
+                    vouchers: vouchers
+                }
+            };
+    
+        const options = {
+            method: 'POST',
+            url: `https://dashboard.boulevard.io/api/2020-01/${BUSINESS_ID}/client`,
+            headers: {
+                'Authorization': generateAuthClientHeaderToken(),
+                'Content-Type': 'application/json',
+                'Cookie': '_sched_cookie=QTEyOEdDTQ.mHsjUNLA3eGUf6OmzUPJlNoEg227-wXF8K5Cb2FDnd5BWY7-PPIQNqdoe4g.NQZg_DkYRfNNTnUt.lS9dUheX7017zTzgniU528Sy5i5a-btIbuUHVfAwFkk_fKzLSuC2qCO1EyR-8thrXff1.u_QbKX6kddDkOr8fS2oY2g'
+            },
+            body: JSON.stringify({
+                query: mutation,
+                variables,
+            }),
+        };
+
+        request(options, function (error, response) {
+            if (error) {
+                console.log("error", error)
+                let ress = {
+                    status: false,
+                    message: "Failed to fetch appointments",
+                };
+                return res.status(200).json(ress);
+            }
+
+            try {
+                // Step 1: Parse the JSON string inside the response body
+                const parsedData = JSON.parse(response.body);
+
+                // Step 2: Navigate to the appointments array
+                //  const appointments = parsedData.data.appointments.edges.map(edge => edge.node);
+
+
+
+                // Now `simplifiedAppointments` contains the array of simplified appointment nodes
+                let ress = {
+                    status: true,
+                    message: "Staffs fetched successfully",
                     data: parsedData
                 };
                 console.log("ress", ress);
@@ -2238,6 +2440,89 @@ export const getServices = async (req, res) => {
                 let ress = {
                     status: true,
                     message: "Services fetched successfully",
+                    data: parsedData
+                };
+                console.log("ress", ress);
+                return res.status(200).send(ress);
+            } catch (parseError) {
+                let ress = {
+                    status: false,
+                    message: "Failed to parse response",
+                    error: parseError.message
+                };
+                return res.status(500).json(ress);
+            }
+        });
+    } catch (error) {
+        console.log(error);
+        let ress = {
+            status: false,
+            message: "Something went wrong in the backend",
+            error: error,
+        };
+        return res.status(500).json(ress);
+    }
+};
+
+
+//Loyality API
+export const clientEnrollmentinLoyality = async (req, res) => {
+    try {
+        const { id, locationId, locationName, name } = req.body;
+        console.log("Token",loyalityAuthToken())
+
+            const mutation = `
+            mutation EnrollClient($input: EnrollClientInput!) {
+                enrollClient(input: $input) {
+                    client {
+                        id
+                        locationId
+                        locationName
+                        name
+                    }
+                }
+            }`;
+    
+            const variables = {
+                input: {
+                    id,
+                    locationId,
+                    locationName,
+                    name
+                }
+            };
+
+        const options = {
+            method: 'POST',
+            url: 'https://loyalty.blvd.co/api/2020-10/',
+            headers: {
+                'Authorization': loyalityAuthToken(),
+                'Content-Type': 'application/json',
+                'Cookie': '_sched_cookie=QTEyOEdDTQ.mHsjUNLA3eGUf6OmzUPJlNoEg227-wXF8K5Cb2FDnd5BWY7-PPIQNqdoe4g.NQZg_DkYRfNNTnUt.lS9dUheX7017zTzgniU528Sy5i5a-btIbuUHVfAwFkk_fKzLSuC2qCO1EyR-8thrXff1.u_QbKX6kddDkOr8fS2oY2g'
+            },
+            body: JSON.stringify({ query: mutation, variables })
+        };
+
+        request(options, function (error, response) {
+            if (error) {
+                console.log("error", error)
+                let ress = {
+                    status: false,
+                    message: "Failed to fetch appointments",
+                };
+                return res.status(200).json(ress);
+            }
+
+            try {
+                // Step 1: Parse the JSON string inside the response body
+                const parsedData = JSON.parse(response.body);
+
+                // Step 2: Navigate to the appointments array
+
+                // Now `simplifiedAppointments` contains the array of simplified appointment nodes
+                let ress = {
+                    status: true,
+                    message: "Client enrolled successfully",
                     data: parsedData
                 };
                 console.log("ress", ress);
