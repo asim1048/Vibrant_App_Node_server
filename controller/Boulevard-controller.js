@@ -8,7 +8,7 @@ const API_KEY = 'c545e74b-5ddc-4ebc-b706-26073b2d04f1';
 const SECRET_KEY = 'ODFue3QbsLKGq+9g/ZXuzoGmQe6uBeqFVD/9pGi/b98=';
 const BUSINESS_ID = '49fcc618-b077-49cc-8666-3efc31348cac';
 let http_basic_header = "";
-let http_basic_header1=""
+let http_basic_header1 = ""
 const generateAuthClientHeaderToken = () => {
     // Concatenate the API_KEY with a colon
     const httpBasicPayload = `${API_KEY}:`;
@@ -44,7 +44,7 @@ const generateAuthTokenOneTime = () => {
 
     // Create HTTP Authorization header
     http_basic_header = `Basic ${http_basic_credentials}`;
-    http_basic_header1=http_basic_credentials;
+    http_basic_header1 = http_basic_credentials;
 
 
 };
@@ -53,11 +53,11 @@ const generateAuthToken = () => {
     return http_basic_header;
 }
 
-const loyalityAuthToken=()=>{
-    const token=http_basic_header1;//admin Auth TOKEN
+const loyalityAuthToken = () => {
+    const token = http_basic_header1;//admin Auth TOKEN
     const basicPayload = ':' + token;
-        const basicCredentials = Buffer.from(basicPayload).toString('base64');
-        const authHeader = 'Basic ' + basicCredentials;
+    const basicCredentials = Buffer.from(basicPayload).toString('base64');
+    const authHeader = 'Basic ' + basicCredentials;
     return authHeader;
 
 }
@@ -2164,11 +2164,11 @@ export const getMemberships = async (req, res) => {
                 // Step 1: Parse the JSON string inside the response body
                 const parsedData = JSON.parse(response.body);
 
-               
+
                 let ress = {
                     status: true,
                     message: "Memberships fetched successfully",
-                    total:parsedData?.data?.memberships?.edges?.length,
+                    total: parsedData?.data?.memberships?.edges?.length,
 
                     data: parsedData
                 };
@@ -2255,11 +2255,11 @@ export const getProducts = async (req, res) => {
                 // Step 1: Parse the JSON string inside the response body
                 const parsedData = JSON.parse(response.body);
 
-               
+
                 let ress = {
                     status: true,
                     message: "Products fetched successfully",
-                    total:parsedData?.data?.products?.edges?.length,
+                    total: parsedData?.data?.products?.edges?.length,
                     data: parsedData
                 };
                 console.log("ress", ress);
@@ -2441,7 +2441,265 @@ export const addProdutToMembershipCart = async (req, res) => {
         return res.status(500).json(ress);
     }
 };
+export const addClientInfoMembershipCart = async (req, res) => {
+    try {
+        const { cartId, clientInformation } = req.body;
 
+
+        const query = `
+            mutation {
+                updateCart(input: {
+                    id: "${cartId}",
+                    clientInformation: {
+                        email: "${clientInformation.email}",
+                        firstName: "${clientInformation.firstName}",
+                        lastName: "${clientInformation.lastName}",
+                        phoneNumber: "${clientInformation.phoneNumber}"
+                    }
+                }) {
+                    cart {
+                        id
+                    }
+                }
+            }
+`;
+
+
+        const options = {
+            method: 'POST',
+            url: `https://dashboard.boulevard.io/api/2020-01/${BUSINESS_ID}/client`,
+            headers: {
+                'Authorization': generateAuthClientHeaderToken(),
+                'Content-Type': 'application/json',
+                'Cookie': '_sched_cookie=QTEyOEdDTQ.mHsjUNLA3eGUf6OmzUPJlNoEg227-wXF8K5Cb2FDnd5BWY7-PPIQNqdoe4g.NQZg_DkYRfNNTnUt.lS9dUheX7017zTzgniU528Sy5i5a-btIbuUHVfAwFkk_fKzLSuC2qCO1EyR-8thrXff1.u_QbKX6kddDkOr8fS2oY2g'
+            },
+            body: JSON.stringify({ query })
+
+        };
+        request(options, function (error, response) {
+            if (error) {
+                console.log("error", error)
+                let ress = {
+                    status: false,
+                    message: "Failed to create cart",
+                    error: error,
+                };
+                return res.status(200).json(ress);
+            }
+
+            try {
+                // Step 1: Parse the JSON string inside the response body
+                const parsedData = JSON.parse(response.body);
+
+                // Step 2: Navigate to the appointments array
+
+
+                // Now `simplifiedAppointments` contains the array of simplified appointment nodes
+                let ress = {
+                    status: true,
+                    message: "Client info added to cart successfully",
+                    data: parsedData
+                };
+                return res.status(200).send(ress);
+            } catch (parseError) {
+                let ress = {
+                    status: false,
+                    message: "Failed to parse response",
+                    error: parseError.message
+                };
+                return res.status(500).json(ress);
+            }
+        });
+    } catch (error) {
+        console.log(error);
+        let ress = {
+            status: false,
+            message: "Something went wrong in the backend",
+            error: error,
+        };
+        return res.status(500).json(ress);
+    }
+};
+export const addPaymentMethodToMembershipCart = async (req, res) => {
+    try {
+        const { cardDetails, cartId } = req.body;
+
+        const tokenizationUrl = 'https://vault-sandbox.joinblvd.com/cards/tokenize';
+        const tokenizationResponse = await axios.post(tokenizationUrl, { card: cardDetails });
+        const dataa = tokenizationResponse.data;
+        console.log("cardDetails", tokenizationResponse)
+
+        let ress = {
+            status: true,
+            message: "Card details added successfully",
+            data: dataa
+        };
+        return res.status(200).send(ress);
+
+
+
+
+    } catch (error) {
+        console.log(error);
+        let ress = {
+            status: false,
+            message: "Something went wrong in the backend",
+            error: error,
+        };
+        return res.status(500).json(ress);
+    }
+};
+export const addPaymentTokenToMembershipCart = async (req, res) => {
+    try {
+        const { paymentToken, cartId } = req.body;
+
+
+
+        const query = `mutation {
+  addCartCardPaymentMethod(input: {
+    id: "${cartId}",
+    token: "${paymentToken}",
+    select: true
+  }) {
+    cart {
+      id
+    }
+  }
+}`;
+
+
+
+        const options = {
+            method: 'POST',
+            url: `https://dashboard.boulevard.io/api/2020-01/${BUSINESS_ID}/client`,
+            headers: {
+                'Authorization': generateAuthClientHeaderToken(),
+                'Content-Type': 'application/json',
+                'Cookie': '_sched_cookie=QTEyOEdDTQ.mHsjUNLA3eGUf6OmzUPJlNoEg227-wXF8K5Cb2FDnd5BWY7-PPIQNqdoe4g.NQZg_DkYRfNNTnUt.lS9dUheX7017zTzgniU528Sy5i5a-btIbuUHVfAwFkk_fKzLSuC2qCO1EyR-8thrXff1.u_QbKX6kddDkOr8fS2oY2g'
+            },
+            body: JSON.stringify({ query })
+
+        };
+        request(options, function (error, response) {
+            if (error) {
+                console.log("error", error)
+                let ress = {
+                    status: false,
+                    message: "Failed to create cart",
+                    error: error,
+                };
+                return res.status(200).json(ress);
+            }
+
+            try {
+                // Step 1: Parse the JSON string inside the response body
+                const parsedData = JSON.parse(response.body);
+
+                // Step 2: Navigate to the appointments array
+
+
+                // Now `simplifiedAppointments` contains the array of simplified appointment nodes
+                let ress = {
+                    status: true,
+                    message: "Card Token added successfully",
+                    data: parsedData
+                };
+                return res.status(200).send(ress);
+            } catch (parseError) {
+                let ress = {
+                    status: false,
+                    message: "Failed to parse response",
+                    error: parseError.message
+                };
+                return res.status(500).json(ress);
+            }
+        });
+
+
+
+
+    } catch (error) {
+        console.log(error);
+        let ress = {
+            status: false,
+            message: "Something went wrong in the backend",
+            error: error,
+        };
+        return res.status(500).json(ress);
+    }
+};
+export const checkoutMembershipCart = async (req, res) => {
+    try {
+        const { cartId } = req.body;
+
+        const query = `mutation {
+  checkoutCart(input: {
+    id: "${cartId}"
+  }) {
+    cart {
+      id
+      completedAt
+    }
+  }
+}`;
+
+
+
+        const options = {
+            method: 'POST',
+            url: `https://dashboard.boulevard.io/api/2020-01/${BUSINESS_ID}/client`,
+            headers: {
+                'Authorization': generateAuthClientHeaderToken(),
+                'Content-Type': 'application/json',
+                'Cookie': '_sched_cookie=QTEyOEdDTQ.mHsjUNLA3eGUf6OmzUPJlNoEg227-wXF8K5Cb2FDnd5BWY7-PPIQNqdoe4g.NQZg_DkYRfNNTnUt.lS9dUheX7017zTzgniU528Sy5i5a-btIbuUHVfAwFkk_fKzLSuC2qCO1EyR-8thrXff1.u_QbKX6kddDkOr8fS2oY2g'
+            },
+            body: JSON.stringify({ query })
+
+        };
+        request(options, function (error, response) {
+            if (error) {
+                console.log("error", error)
+                let ress = {
+                    status: false,
+                    message: "Failed to create cart",
+                    error: error,
+                };
+                return res.status(200).json(ress);
+            }
+
+            try {
+                // Step 1: Parse the JSON string inside the response body
+                const parsedData = JSON.parse(response.body);
+
+                // Step 2: Navigate to the appointments array
+
+
+                // Now `simplifiedAppointments` contains the array of simplified appointment nodes
+                let ress = {
+                    status: true,
+                    message: "Appoinment created successfully",
+                    data: parsedData
+                };
+                return res.status(200).send(ress);
+            } catch (parseError) {
+                let ress = {
+                    status: false,
+                    message: "Failed to parse response",
+                    error: parseError.message
+                };
+                return res.status(500).json(ress);
+            }
+        });
+    } catch (error) {
+        console.log(error);
+        let ress = {
+            status: false,
+            message: "Something went wrong in the backend",
+            error: error,
+        };
+        return res.status(500).json(ress);
+    }
+};
 //services
 export const getServices = async (req, res) => {
     try {
@@ -2491,7 +2749,7 @@ export const getServices = async (req, res) => {
                 // Step 1: Parse the JSON string inside the response body
                 const parsedData = JSON.parse(response.body);
 
-               
+
                 let ress = {
                     status: true,
                     message: "Services fetched successfully",
@@ -2525,7 +2783,7 @@ export const clientEnrollmentinLoyality = async (req, res) => {
     try {
         const { id, locationId, locationName, name } = req.body;
 
-            const mutation = `
+        const mutation = `
             mutation EnrollClient($input: EnrollClientInput!) {
                 enrollClient(input: $input) {
                     client {
@@ -2536,15 +2794,15 @@ export const clientEnrollmentinLoyality = async (req, res) => {
                     }
                 }
             }`;
-    
-            const variables = {
-                input: {
-                    id,
-                    locationId,
-                    locationName,
-                    name
-                }
-            };
+
+        const variables = {
+            input: {
+                id,
+                locationId,
+                locationName,
+                name
+            }
+        };
 
         const options = {
             method: 'POST',

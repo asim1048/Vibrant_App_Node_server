@@ -8,7 +8,7 @@ import { getlocationAppointments,cancelAppointment,getAvailableRescheduleDates,g
 import {createCartforUser, sendOTPforLoginViaNumber ,sendOTPforLoginViaEmail,verifyLoginUsingOTP,createClient,getClientInfo} from '../controller/Boulevard-controller.js';
 import { cartItemswithAdons ,getStafsList,addStaffToCart} from '../controller/Boulevard-controller.js';
 import { getMemberships } from '../controller/Boulevard-controller.js';
-import { getServices,getProducts,createMembershipCart ,addProdutToMembershipCart} from '../controller/Boulevard-controller.js';
+import { getServices,getProducts,createMembershipCart ,addProdutToMembershipCart,addClientInfoMembershipCart,addPaymentMethodToMembershipCart,addPaymentTokenToMembershipCart,checkoutMembershipCart} from '../controller/Boulevard-controller.js';
 import { clientEnrollmentinLoyality } from '../controller/Boulevard-controller.js';
 //Token
 import { addToken } from '../controller/device-token-controller.js';
@@ -141,6 +141,10 @@ route.get('/getMemberships', getMemberships)
 route.get('/getProducts', getProducts)
 route.post('/createMembershipCart', createMembershipCart)
 route.post('/addProdutToMembershipCart', addProdutToMembershipCart)
+route.post('/addClientInfoMembershipCart', addClientInfoMembershipCart)
+route.post('/addPaymentMethodToMembershipCart', addPaymentMethodToMembershipCart)
+route.post('/addPaymentTokenToMembershipCart', addPaymentTokenToMembershipCart)
+route.post('/checkoutMembershipCart', checkoutMembershipCart)
 
 //Loyality
 route.post('/clientEnrollmentinLoyality', clientEnrollmentinLoyality)
