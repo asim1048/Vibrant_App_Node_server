@@ -66,7 +66,6 @@ const loyalityAuthToken=()=>{
 export const getlocationAppointments = async (req, res) => {
     try {
         const { locationid, email } = req.body;
-        console.log("SALAM");
 
         const options = {
             method: 'POST',
@@ -140,7 +139,6 @@ export const getlocationAppointments = async (req, res) => {
 
             try {
                 // Step 1: Parse the JSON string inside the response body
-                console.log("response.body",response.body)
                 const parsedData = JSON.parse(response.body);
 
                 // Step 2: Navigate to the appointments array
@@ -2285,47 +2283,35 @@ export const getProducts = async (req, res) => {
         return res.status(500).json(ress);
     }
 };
-export const createMembershipOfUser = async (req, res) => {
+export const createMembershipCart = async (req, res) => {
     try {
+        const { locationId } = req.body;
 
-        const { clientId, interval, name, startOn, unitPrice, vouchers } = req.body;
 
-
-            const mutation = `
-            mutation EnrollClient($input: EnrollClientInput!) {
-                enrollClient(input: $input) {
-                    client {
-                        id
+        const query = `
+    mutation {
+        createCart(input: {
+            locationId: "${locationId}"
+        }) {
+            cart {
+                id
+                availableCategories {
+                    name
+                    availableItems {
                         name
-                        memberships {
-                            id
-                            name
-                            startOn
-                            endOn
-                            status
-                            unitPrice
-                            vouchers {
-                                id
-                                code
-                            }
+                        id ... on CartAvailablePurchasableItem{
+                          id
+                          name
                         }
+                        
                     }
                 }
-            }`;
-    
-            const variables = {
-                input: {
-                    client: {
-                        id: clientId,
-                        name: name
-                    },
-                    interval: interval,
-                    startOn: startOn,
-                    unitPrice: unitPrice,
-                    vouchers: vouchers
-                }
-            };
-    
+            }
+        }
+    }
+`;
+
+
         const options = {
             method: 'POST',
             url: `https://dashboard.boulevard.io/api/2020-01/${BUSINESS_ID}/client`,
@@ -2334,18 +2320,16 @@ export const createMembershipOfUser = async (req, res) => {
                 'Content-Type': 'application/json',
                 'Cookie': '_sched_cookie=QTEyOEdDTQ.mHsjUNLA3eGUf6OmzUPJlNoEg227-wXF8K5Cb2FDnd5BWY7-PPIQNqdoe4g.NQZg_DkYRfNNTnUt.lS9dUheX7017zTzgniU528Sy5i5a-btIbuUHVfAwFkk_fKzLSuC2qCO1EyR-8thrXff1.u_QbKX6kddDkOr8fS2oY2g'
             },
-            body: JSON.stringify({
-                query: mutation,
-                variables,
-            }),
-        };
+            body: JSON.stringify({ query })
 
+        };
         request(options, function (error, response) {
             if (error) {
                 console.log("error", error)
                 let ress = {
                     status: false,
-                    message: "Failed to fetch appointments",
+                    message: "Failed to create cart",
+                    error: error,
                 };
                 return res.status(200).json(ress);
             }
@@ -2355,17 +2339,88 @@ export const createMembershipOfUser = async (req, res) => {
                 const parsedData = JSON.parse(response.body);
 
                 // Step 2: Navigate to the appointments array
-                //  const appointments = parsedData.data.appointments.edges.map(edge => edge.node);
-
 
 
                 // Now `simplifiedAppointments` contains the array of simplified appointment nodes
                 let ress = {
                     status: true,
-                    message: "Staffs fetched successfully",
+                    message: "Cart Created successfully",
                     data: parsedData
                 };
-                console.log("ress", ress);
+                return res.status(200).send(ress);
+            } catch (parseError) {
+                let ress = {
+                    status: false,
+                    message: "Failed to parse response",
+                    error: parseError.message
+                };
+                return res.status(500).json(ress);
+            }
+        });
+    } catch (error) {
+        console.log(error);
+        let ress = {
+            status: false,
+            message: "Something went wrong in the backend",
+            error: error,
+        };
+        return res.status(500).json(ress);
+    }
+};
+export const addProdutToMembershipCart = async (req, res) => {
+    try {
+        const { cartId, itemId, } = req.body;
+
+        // Construct the mutation dynamically
+        const query = `
+        mutation {
+            addCartSelectedPurchasableItem(input: {
+                id: "${cartId}",
+                itemId: "${itemId}",
+            }) {
+                cart {
+                    id
+                }
+            }
+        }
+    `;
+
+
+        const options = {
+            method: 'POST',
+            url: `https://dashboard.boulevard.io/api/2020-01/${BUSINESS_ID}/client`,
+            headers: {
+                'Authorization': generateAuthClientHeaderToken(),
+                'Content-Type': 'application/json',
+                'Cookie': '_sched_cookie=QTEyOEdDTQ.mHsjUNLA3eGUf6OmzUPJlNoEg227-wXF8K5Cb2FDnd5BWY7-PPIQNqdoe4g.NQZg_DkYRfNNTnUt.lS9dUheX7017zTzgniU528Sy5i5a-btIbuUHVfAwFkk_fKzLSuC2qCO1EyR-8thrXff1.u_QbKX6kddDkOr8fS2oY2g'
+            },
+            body: JSON.stringify({ query })
+
+        };
+        request(options, function (error, response) {
+            if (error) {
+                console.log("error", error)
+                let ress = {
+                    status: false,
+                    message: "Failed to create cart",
+                    error: error,
+                };
+                return res.status(200).json(ress);
+            }
+
+            try {
+                // Step 1: Parse the JSON string inside the response body
+                const parsedData = JSON.parse(response.body);
+
+                // Step 2: Navigate to the appointments array
+
+
+                // Now `simplifiedAppointments` contains the array of simplified appointment nodes
+                let ress = {
+                    status: true,
+                    message: "Item added to cart successfully",
+                    data: parsedData
+                };
                 return res.status(200).send(ress);
             } catch (parseError) {
                 let ress = {
@@ -2469,7 +2524,6 @@ export const getServices = async (req, res) => {
 export const clientEnrollmentinLoyality = async (req, res) => {
     try {
         const { id, locationId, locationName, name } = req.body;
-        console.log("Token",loyalityAuthToken())
 
             const mutation = `
             mutation EnrollClient($input: EnrollClientInput!) {
