@@ -61,6 +61,14 @@ const loyalityAuthToken = () => {
     return authHeader;
 
 }
+const getCurrentDateYMD = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+};
+
 
 
 export const getlocationAppointments = async (req, res) => {
@@ -2108,13 +2116,19 @@ export const getMemberships = async (req, res) => {
     try {
         const query = `
         query {
-            memberships(first: 500) {
+            memberships(first: 1000) {
                 edges {
                     node {
                         id
                         locationId
                         name
                         clientId
+                        client{
+                          name
+                          email
+                          mobilePhone
+                          id
+                        }
                         status
                         statusReason
                         statusReasonCustom
@@ -2170,6 +2184,377 @@ export const getMemberships = async (req, res) => {
                     message: "Memberships fetched successfully",
                     total: parsedData?.data?.memberships?.edges?.length,
 
+                    data: parsedData
+                };
+                console.log("ress", ress);
+                return res.status(200).send(ress);
+            } catch (parseError) {
+                let ress = {
+                    status: false,
+                    message: "Failed to parse response",
+                    error: parseError.message
+                };
+                return res.status(500).json(ress);
+            }
+        });
+    } catch (error) {
+        console.log(error);
+        let ress = {
+            status: false,
+            message: "Something went wrong in the backend",
+            error: error,
+        };
+        return res.status(500).json(ress);
+    }
+};
+export const getMyMemberships = async (req, res) => {
+    try {
+        const { clientId } = req.body;
+
+        const query = `
+        query {
+            memberships(first: 1000) {
+                edges {
+                    node {
+                        id
+                        locationId
+                        name
+                        clientId
+                        client{
+                          name
+                          email
+                          mobilePhone
+                          id
+                        }
+                        status
+                        statusReason
+                        statusReasonCustom
+                        unitPrice
+                        vouchers{
+                        quantity
+                        services{
+                        id
+                        name
+                        defaultPrice
+                        description
+                        }
+                        }
+                    }
+                }
+                pageInfo {
+                    hasNextPage
+                    hasPreviousPage
+                    startCursor
+                    endCursor
+                }
+            }
+        }`;
+
+        
+
+        const options = {
+            method: 'POST',
+            url: 'https://dashboard.boulevard.io/api/2020-01/admin',
+            headers: {
+                'Authorization': generateAuthToken(),
+                'Content-Type': 'application/json',
+                'Cookie': '_sched_cookie=QTEyOEdDTQ.mHsjUNLA3eGUf6OmzUPJlNoEg227-wXF8K5Cb2FDnd5BWY7-PPIQNqdoe4g.NQZg_DkYRfNNTnUt.lS9dUheX7017zTzgniU528Sy5i5a-btIbuUHVfAwFkk_fKzLSuC2qCO1EyR-8thrXff1.u_QbKX6kddDkOr8fS2oY2g'
+            },
+            body: JSON.stringify({ query: query })
+
+        };
+
+        request(options, function (error, response) {
+            if (error) {
+                console.log("error", error)
+                let ress = {
+                    status: false,
+                    message: "Failed to fetch appointments",
+                };
+                return res.status(200).json(ress);
+            }
+
+            try {
+                // Step 1: Parse the JSON string inside the response body
+                const parsedData = JSON.parse(response.body);
+
+                // Step 2: Filter memberships based on clientId
+                const memberships = parsedData?.data?.memberships?.edges || [];
+                const filteredMemberships = memberships.filter(edge => edge.node.clientId === clientId);
+
+                let ress = {
+                    status: true,
+                    message: "Memberships fetched successfully",
+                    data: {
+                        memberships: {
+                            edges: filteredMemberships,
+                            pageInfo: parsedData.data.memberships.pageInfo
+                        }
+                    }
+                };
+                console.log("ress", ress);
+                return res.status(200).send(ress);
+            } catch (parseError) {
+                let ress = {
+                    status: false,
+                    message: "Failed to parse response",
+                    error: parseError.message
+                };
+                return res.status(500).json(ress);
+            }
+        });
+    } catch (error) {
+        console.log(error);
+        let ress = {
+            status: false,
+            message: "Something went wrong in the backend",
+            error: error,
+        };
+        return res.status(500).json(ress);
+    }
+};
+export const pauseMembership = async (req, res) => {
+    try {
+        const { membershipId, reason, reasonCustom, unpauseOn, sendNotification } = req.body;
+
+        if (!membershipId || !reason || !unpauseOn) {
+            return res.status(400).json({
+                status: false,
+                message: "Missing required fields",
+            });
+        }
+
+        const query = `
+        mutation PauseMembership($input: MembershipPauseInput!) {
+            membershipPause(input: $input) {
+                membership {
+                    id
+                    status
+                }
+            }
+        }`;
+        const variables = {
+            input: {
+                id: membershipId,
+                reason: reason,
+                reasonCustom: reasonCustom || null,
+                sendNotification: sendNotification || false,
+                unpauseOn: unpauseOn
+            }
+        };
+
+        
+
+        const options = {
+            method: 'POST',
+            url: 'https://dashboard.boulevard.io/api/2020-01/admin',
+            headers: {
+                'Authorization': generateAuthToken(),
+                'Content-Type': 'application/json',
+                'Cookie': '_sched_cookie=QTEyOEdDTQ.mHsjUNLA3eGUf6OmzUPJlNoEg227-wXF8K5Cb2FDnd5BWY7-PPIQNqdoe4g.NQZg_DkYRfNNTnUt.lS9dUheX7017zTzgniU528Sy5i5a-btIbuUHVfAwFkk_fKzLSuC2qCO1EyR-8thrXff1.u_QbKX6kddDkOr8fS2oY2g'
+            },
+            body: JSON.stringify({
+                query: query,
+                variables: variables
+            })
+
+        };
+
+        request(options, function (error, response) {
+            if (error) {
+                console.log("error", error)
+                let ress = {
+                    status: false,
+                    message: "Failed to fetch appointments",
+                };
+                return res.status(200).json(ress);
+            }
+
+            try {
+                // Step 1: Parse the JSON string inside the response body
+                const parsedData = JSON.parse(response.body);
+
+               
+                let ress = {
+                    status: true,
+                    message: "Memberships Paused successfully",
+                    data: parsedData
+                };
+                console.log("ress", ress);
+                return res.status(200).send(ress);
+            } catch (parseError) {
+                let ress = {
+                    status: false,
+                    message: "Failed to parse response",
+                    error: parseError.message
+                };
+                return res.status(500).json(ress);
+            }
+        });
+    } catch (error) {
+        console.log(error);
+        let ress = {
+            status: false,
+            message: "Something went wrong in the backend",
+            error: error,
+        };
+        return res.status(500).json(ress);
+    }
+};
+export const unpauseMembership = async (req, res) => {
+    try {
+        const { membershipId, sendNotification } = req.body;
+
+        if (!membershipId) {
+            return res.status(400).json({
+                status: false,
+                message: "Missing required fields",
+            });
+        }
+
+        const query = `
+        mutation UnpauseMembership($input: MembershipUnpauseInput!) {
+            membershipUnpause(input: $input) {
+                membership {
+                    id
+                    status
+                }
+            }
+        }`;
+
+        const variables = {
+            input: {
+                id: membershipId,
+                sendNotification: sendNotification || false,
+            }
+        };
+        
+
+        
+
+        const options = {
+            method: 'POST',
+            url: 'https://dashboard.boulevard.io/api/2020-01/admin',
+            headers: {
+                'Authorization': generateAuthToken(),
+                'Content-Type': 'application/json',
+                'Cookie': '_sched_cookie=QTEyOEdDTQ.mHsjUNLA3eGUf6OmzUPJlNoEg227-wXF8K5Cb2FDnd5BWY7-PPIQNqdoe4g.NQZg_DkYRfNNTnUt.lS9dUheX7017zTzgniU528Sy5i5a-btIbuUHVfAwFkk_fKzLSuC2qCO1EyR-8thrXff1.u_QbKX6kddDkOr8fS2oY2g'
+            },
+            body: JSON.stringify({
+                query: query,
+                variables: variables
+            })
+
+        };
+
+        request(options, function (error, response) {
+            if (error) {
+                console.log("error", error)
+                let ress = {
+                    status: false,
+                    message: "Failed to fetch appointments",
+                };
+                return res.status(200).json(ress);
+            }
+
+            try {
+                // Step 1: Parse the JSON string inside the response body
+                const parsedData = JSON.parse(response.body);
+
+               
+                let ress = {
+                    status: true,
+                    message: "Memberships unpaused successfully",
+                    data: parsedData
+                };
+                console.log("ress", ress);
+                return res.status(200).send(ress);
+            } catch (parseError) {
+                let ress = {
+                    status: false,
+                    message: "Failed to parse response",
+                    error: parseError.message
+                };
+                return res.status(500).json(ress);
+            }
+        });
+    } catch (error) {
+        console.log(error);
+        let ress = {
+            status: false,
+            message: "Something went wrong in the backend",
+            error: error,
+        };
+        return res.status(500).json(ress);
+    }
+};
+export const cancelMembership = async (req, res) => {
+    try {
+        const { membershipId,  reason, reasonCustom, sendNotification } = req.body;
+          const cancelOn=getCurrentDateYMD();
+        if (!membershipId ||   !reason) {
+            return res.status(400).json({
+                status: false,
+                message: "Missing required fields",
+            });
+        }
+
+        const query = `
+        mutation CancelMembership($input: MembershipCancelInput!) {
+            membershipCancel(input: $input) {
+                membership {
+                    id
+                    status
+                }
+            }
+        }`;
+
+        const variables = {
+            input: {
+                id: membershipId,
+                cancelOn: cancelOn,
+                reason: reason,
+                reasonCustom: reasonCustom || null,
+                sendNotification: sendNotification || false,
+            }
+        };
+        
+
+        
+
+        const options = {
+            method: 'POST',
+            url: 'https://dashboard.boulevard.io/api/2020-01/admin',
+            headers: {
+                'Authorization': generateAuthToken(),
+                'Content-Type': 'application/json',
+                'Cookie': '_sched_cookie=QTEyOEdDTQ.mHsjUNLA3eGUf6OmzUPJlNoEg227-wXF8K5Cb2FDnd5BWY7-PPIQNqdoe4g.NQZg_DkYRfNNTnUt.lS9dUheX7017zTzgniU528Sy5i5a-btIbuUHVfAwFkk_fKzLSuC2qCO1EyR-8thrXff1.u_QbKX6kddDkOr8fS2oY2g'
+            },
+            body: JSON.stringify({
+                query: query,
+                variables: variables
+            })
+
+        };
+
+        request(options, function (error, response) {
+            if (error) {
+                console.log("error", error)
+                let ress = {
+                    status: false,
+                    message: "Failed to fetch appointments",
+                };
+                return res.status(200).json(ress);
+            }
+
+            try {
+                // Step 1: Parse the JSON string inside the response body
+                const parsedData = JSON.parse(response.body);
+
+               
+                let ress = {
+                    status: true,
+                    message: "Memberships cancelled successfully",
                     data: parsedData
                 };
                 console.log("ress", ress);

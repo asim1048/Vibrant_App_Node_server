@@ -7,7 +7,7 @@ import { signUp,sendOTpForSignUp,sendOTpForForgotPassword, logIn,userInfoByID, u
 import { getlocationAppointments,cancelAppointment,getAvailableRescheduleDates,getAvailableRescheduleTimes,rescheduleAppointment,appoinmentCheckinArrived,getlocations,getAppoinmentManageURL,locationServices,createAppoinmentCart,addClientInfoToAppoinmentCart,addItemtoAppoinmentCart ,appointmentAvailableTimeSlots,addSelectedTimeToCart,addPaymentMethodToAppoinmentCart,addPaymentTokenToCart,checkoutAppoinmentCart} from '../controller/Boulevard-controller.js';
 import {createCartforUser, sendOTPforLoginViaNumber ,sendOTPforLoginViaEmail,verifyLoginUsingOTP,createClient,getClientInfo} from '../controller/Boulevard-controller.js';
 import { cartItemswithAdons ,getStafsList,addStaffToCart} from '../controller/Boulevard-controller.js';
-import { getMemberships } from '../controller/Boulevard-controller.js';
+import { getMemberships,getMyMemberships,pauseMembership,unpauseMembership,cancelMembership } from '../controller/Boulevard-controller.js';
 import { getServices,getProducts,createMembershipCart ,addProdutToMembershipCart,addClientInfoMembershipCart,addPaymentMethodToMembershipCart,addPaymentTokenToMembershipCart,checkoutMembershipCart} from '../controller/Boulevard-controller.js';
 import { clientEnrollmentinLoyality } from '../controller/Boulevard-controller.js';
 //Token
@@ -138,6 +138,11 @@ route.post('/getClientInfo', getClientInfo)
 
 //Memberships
 route.get('/getMemberships', getMemberships)
+route.post('/getMyMemberships', getMyMemberships)
+route.post('/pauseMembership', pauseMembership)
+route.post('/unpauseMembership', unpauseMembership)
+route.post('/cancelMembership', cancelMembership)
+
 route.get('/getProducts', getProducts)
 route.post('/createMembershipCart', createMembershipCart)
 route.post('/addProdutToMembershipCart', addProdutToMembershipCart)
