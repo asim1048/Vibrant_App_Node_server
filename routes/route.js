@@ -13,7 +13,7 @@ import { clientEnrollmentinLoyality } from '../controller/Boulevard-controller.j
 //Token
 import { addToken } from '../controller/device-token-controller.js';
 
-import { sendNotifications } from '../controller/Notifications-controlller.js';
+import { sendNotifications ,userNotifications} from '../controller/Notifications-controlller.js';
 import { addAppoinmentRating } from '../controller/appoinment-rating-controller.js';
 import upload from '../middleware/multer.js';
 
@@ -164,6 +164,7 @@ route.get('/getServices', getServices)
 
 
 route.get('/sendNotifications', sendNotifications)
+route.post('/userNotifications', userNotifications)
 
 
 route.post('/addToken', addToken)

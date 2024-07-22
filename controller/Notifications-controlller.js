@@ -3,6 +3,7 @@ import crypto from 'crypto';
 import request from 'request';
 
 import Devicetoken from "../model/deviceToken.js";
+import Notification from '../model/notification.js'
 
 
 const API_KEY = 'c545e74b-5ddc-4ebc-b706-26073b2d04f1';
@@ -164,19 +165,35 @@ export const sendNotificationsScheduled = async () => {
               const notifications = simplifiedAppointments.map(appointment => {
                 const email = appointment.client.email;
                 return appointment.services.map(service => {
+                    const appointmentDate = new Date(service.startAt);
+                    const currentDate = new Date();
+                    const isFutureAppointment = appointmentDate > currentDate;
+                
+                    const message = isFutureAppointment 
+                        ? `You have an upcoming appointment for ${service.service.name} on ${appointmentDate.toLocaleString()}.`
+                        : `You had an appointment for ${service.service.name} on ${appointmentDate.toLocaleString()}.`;
+                
                     return {
+                        id: appointment.id,
                         title: `Reminder for ${service.service.name}`,
-                        message: `You have an appointment for ${service.service.name} on ${new Date(service.startAt).toLocaleString()}.`,
+                        message: message,
                         email: email
                     };
                 });
+                
             }).flat();
 
 
             for (const notification of notifications) {
-              const { email, title, message } = notification;
+              const { email, title, message,id } = notification;
 
               const userToken = devicetokens.find(token => token.email === email);
+              const notificationn=await Notification.findOneAndUpdate(
+                { appointmentId: id }, // Search criteria
+                { email, title, message, appointmentId: id }, // Data to update
+                { upsert: true, new: true } // Options: create if not exists, return the new document
+              );
+             await notificationn.save();
               if (userToken) {
                   const response = await admin.messaging().sendMulticast({
                       tokens: [userToken.token],
@@ -188,7 +205,7 @@ export const sendNotificationsScheduled = async () => {
                       },
                   });
 
-                  //console.log(`Notification sent to ${email}: `, response);
+                  console.log(`Notification sent to ${email}: `, response);
               }
           }
                           
@@ -205,3 +222,23 @@ export const sendNotificationsScheduled = async () => {
       
   }
 };
+export const userNotifications = async (request, response) => {
+    try {
+        const { email } = request.body;
+
+        const notifications = await Notification.find({ email: email });
+        
+            return response.status(200).json({
+                status: true,
+                message: "Notifications fetched",
+                data: notifications
+            });
+        
+    } catch (error) {
+        return response.status(500).json({
+            status: false,
+            message: "Something went wrong in the backend",
+            error: error.message
+        });
+    }
+}

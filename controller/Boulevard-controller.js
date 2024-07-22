@@ -91,6 +91,7 @@ export const getlocationAppointments = async (req, res) => {
                                 id
                                 clientId
                                 state
+                                pendingFormCount
                                 client {
                                     name
                                     createdAt
