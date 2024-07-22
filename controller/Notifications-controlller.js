@@ -169,13 +169,16 @@ export const sendNotificationsScheduled = async () => {
                     const currentDate = new Date();
                     const isFutureAppointment = appointmentDate > currentDate;
                 
+                    const options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true };
+                    const formattedDate = appointmentDate.toLocaleString('en-US', options);
+                
                     const message = isFutureAppointment 
-                        ? `You have an upcoming appointment for ${service.service.name} on ${appointmentDate.toLocaleString()}.`
-                        : `You had an appointment for ${service.service.name} on ${appointmentDate.toLocaleString()}.`;
+                        ? `You have an upcoming appointment for ${service.service.name} on ${formattedDate}.`
+                        : `You had an appointment for ${service.service.name} on ${formattedDate}.`;
                 
                     return {
                         id: appointment.id,
-                        title: `Reminder for ${service.service.name}`,
+                        title: `Appoinment for ${service.service.name}`,
                         message: message,
                         email: email
                     };
