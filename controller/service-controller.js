@@ -1,7 +1,6 @@
 import Service from "../model/services.js";
 export const createOrUpdate = async (req, res) => {
-    const { serviceId, name, description } = req.body;
-    const image = req.file ? `/uploads/services/${req.file.filename}` : undefined;
+    const { serviceId, name, description,image } = req.body;
 
     try {
         let service = await Service.findOne({ serviceId });
@@ -10,9 +9,7 @@ export const createOrUpdate = async (req, res) => {
             // Update the existing service
             service.name = name || service.name;
             service.description = description || service.description;
-            if (image) {
-                service.image = image;
-            }
+            service.image = image;
             await service.save();
             res.status(200).json({status:true, message: 'Service updated successfully',data: service });
         } else {
@@ -21,7 +18,7 @@ export const createOrUpdate = async (req, res) => {
                 serviceId,
                 name,
                 description,
-                image: image || '/uploads/services/default_service.png'
+                image: image 
             });
             await service.save();
             res.status(201).json({status:true, message: 'Service created successfully',data: service });

@@ -12,7 +12,7 @@ const serviceSchema = mongoose.Schema({
     },
     image: {
         type:String,
-        default:"/uploads/services/default_service.png"
+        default:"https://images.pexels.com/photos/3762875/pexels-photo-3762875.jpeg?auto=compress&cs=tinysrgb&w=600"
     },
 }, {
     timestamps: true

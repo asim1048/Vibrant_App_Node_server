@@ -18,7 +18,6 @@ import { addAppoinmentRating } from '../controller/appoinment-rating-controller.
 
 import { createOrUpdate,findCustomService ,customServicesList} from '../controller/service-controller.js';
 import upload from '../middleware/multer.js';
-import service from '../middleware/service.js';
 
 
 
@@ -176,7 +175,7 @@ route.post('/addToken', addToken)
 route.post('/addAppoinmentRating', addAppoinmentRating)
 
 //custom service handling
-route.post('/createOrUpdate', service.single('image'), createOrUpdate);
+route.post('/createOrUpdate',  createOrUpdate);
 route.post('/findCustomService',  findCustomService);
 route.get('/customServicesList',  customServicesList);
 
