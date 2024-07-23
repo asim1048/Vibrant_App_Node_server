@@ -15,7 +15,10 @@ import { addToken } from '../controller/device-token-controller.js';
 
 import { sendNotifications ,userNotifications} from '../controller/Notifications-controlller.js';
 import { addAppoinmentRating } from '../controller/appoinment-rating-controller.js';
+
+import { createOrUpdate,findCustomService ,customServicesList} from '../controller/service-controller.js';
 import upload from '../middleware/multer.js';
+import service from '../middleware/service.js';
 
 
 
@@ -171,5 +174,11 @@ route.post('/addToken', addToken)
 
 //custom appoinmentRating
 route.post('/addAppoinmentRating', addAppoinmentRating)
+
+//custom service handling
+route.post('/createOrUpdate', service.single('image'), createOrUpdate);
+route.post('/findCustomService',  findCustomService);
+route.get('/customServicesList',  customServicesList);
+
 
 export default route;
