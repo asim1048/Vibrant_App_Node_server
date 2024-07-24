@@ -6,7 +6,7 @@ const notificationSchema = mongoose.Schema({
   },
   notificationType: {
     type: String,
-    default: 'Appointment',
+    default: 'Appointment',//Appointment: for Reminder(Present,past,future)-------Appointment-Booking: For New Booked Appoinment-----Appointment-FillForm:to Fill Form --------Appointment-Resch: For Successfully resch----Appointment-Cancel: After successfully cancel
   },
   appointmentId: {
     type: String,

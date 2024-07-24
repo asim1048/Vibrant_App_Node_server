@@ -13,7 +13,7 @@ import { clientEnrollmentinLoyality } from '../controller/Boulevard-controller.j
 //Token
 import { addToken } from '../controller/device-token-controller.js';
 
-import { sendNotifications ,userNotifications} from '../controller/Notifications-controlller.js';
+import { sendNotifications ,userNotifications,addNotification} from '../controller/Notifications-controlller.js';
 import { addAppoinmentRating } from '../controller/appoinment-rating-controller.js';
 
 import { createOrUpdate,findCustomService ,customServicesList} from '../controller/service-controller.js';
@@ -168,12 +168,13 @@ route.get('/getServices', getServices)
 
 route.get('/sendNotifications', sendNotifications)
 route.post('/userNotifications', userNotifications)
+route.post('/addNotification', addNotification)
 
 
 route.post('/addToken', addToken)
 
 //custom appoinmentRating
-route.post('/addAppoinmentRating', addAppoinmentRating)
+route.post('/addAppoinmentRating', addAppoinmentRating);
 
 //custom service handling
 route.post('/createOrUpdate',  createOrUpdate);

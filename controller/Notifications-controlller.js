@@ -245,3 +245,32 @@ export const userNotifications = async (request, response) => {
         });
     }
 }
+export const addNotification = async (request, response) => {
+    try {
+        const {email,notificationType,appoinmentid, title, message } = request.body;
+
+        
+        const newNotification = new Notification({
+            email:email,
+            notificationType:notificationType,
+            title:title,
+            appointmentId:appoinmentid,
+            message:message
+        });
+
+        await newNotification.save();
+        let res = {
+            status: true,
+            message: "Notification created successfully",
+            data: newNotification
+        };
+        return response.status(200).json(res);
+    } catch (error) {
+        let res = {
+            status: false,
+            message: "Something went wrong in the backend",
+            error: error,
+        };
+        return response.status(500).json(res);
+    }
+}
