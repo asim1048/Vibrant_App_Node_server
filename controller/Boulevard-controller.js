@@ -967,6 +967,114 @@ export const getStafsList = async (req, res) => {
         return res.status(500).json(ress);
     }
 };
+export const getAllStafs = async (req, res) => {
+    try {
+        const { locationId, role,  } = req.body;
+
+        const query = `
+        query GetStaff($first: Int!) {
+            staff(first: $first) {
+                edges {
+                    node {
+                        id
+                        active
+                        email
+                        name
+                        mobilePhone
+                        appRole {
+                            id
+                            name
+                        }
+                        createdAt
+                        displayName
+                        firstName
+                        lastName
+                        locations {
+                            id
+                            name
+                        }
+                        role {
+                            id
+                            name
+                        }
+                        updatedAt
+                    }
+                }
+                pageInfo {
+                    hasNextPage
+                    hasPreviousPage
+                    startCursor
+                    endCursor
+                }
+            }
+        }`;
+
+        const variables = {
+            first: 100
+        };
+        // Send the mutation using fetch
+        const options = {
+            method: 'POST',
+            url: 'https://dashboard.boulevard.io/api/2020-01/admin',
+            headers: {
+                'Authorization': generateAuthToken(),
+                'Content-Type': 'application/json',
+                'Cookie': '_sched_cookie=QTEyOEdDTQ.mHsjUNLA3eGUf6OmzUPJlNoEg227-wXF8K5Cb2FDnd5BWY7-PPIQNqdoe4g.NQZg_DkYRfNNTnUt.lS9dUheX7017zTzgniU528Sy5i5a-btIbuUHVfAwFkk_fKzLSuC2qCO1EyR-8thrXff1.u_QbKX6kddDkOr8fS2oY2g'
+            },
+            body: JSON.stringify({
+                query: query,
+                variables: variables
+            })
+        };
+        request(options, function (error, response) {
+            if (error) {
+                console.log("error", error)
+                let ress = {
+                    status: false,
+                    message: "Failed to fetch appointments",
+                };
+                return res.status(200).json(ress);
+            }
+
+            try {
+                // Step 1: Parse the JSON string inside the response body
+                const parsedData = JSON.parse(response.body);
+
+                // Define the location ID to filter by
+
+                // Filter staff whose role is "Esthetician" and belong to the specified location
+                const filteredStaff = parsedData.data.staff.edges.filter(edge => 
+                    edge.node.role.name === role &&
+                    edge.node.locations.some(location => location.id === locationId)
+                );
+
+                let ress = {
+                    status: true,
+                    message: "Staff fetched successfully",
+                    data: filteredStaff.map(edge => edge.node)
+                };
+                console.log("ress", ress);
+                return res.status(200).send(ress);
+            } catch (parseError) {
+                let ress = {
+                    status: false,
+                    message: "Failed to parse response",
+                    error: parseError.message
+                };
+                return res.status(500).json(ress);
+            }
+        });
+
+    } catch (error) {
+        console.log(error);
+        let ress = {
+            status: false,
+            message: "Something went wrong in the backend",
+            error: error.message,
+        };
+        return res.status(500).json(ress);
+    }
+};
 export const addStaffToCart = async (req, res) => {
     try {
         const { itemStaffVariantId, id, itemId } = req.body;
@@ -2776,26 +2884,46 @@ export const createMembershipCart = async (req, res) => {
         const { locationId } = req.body;
 
 
-        const query = `
-    mutation {
-        createCart(input: {
-            locationId: "${locationId}"
-        }) {
-            cart {
-                id
-                availableCategories {
-                    name
-                    availableItems {
-                        name
-                        id ... on CartAvailablePurchasableItem{
-                          id
-                          name
-                        }
+//         const query = `
+//     mutation {
+//         createCart(input: {
+//             locationId: "${locationId}"
+//         }) {
+//             cart {
+//                 id
+//                 availableCategories {
+//                     name
+//                     availableItems {
+//                         name
+//                         id ... on CartAvailablePurchasableItem{
+//                           id
+//                           name
+//                         }
                         
-                    }
+//                     }
+//                 }
+//             }
+//         }
+//     }
+// `;
+const query = `
+    mutation{
+    createCart(input: {
+        locationId: "${locationId}"      
+    }){
+    cart{
+        id
+        availableCategories{
+            name
+            availableItems{
+                id ... on CartAvailablePurchasableItem{
+                    name
+                    id
+                }
                 }
             }
         }
+    }
     }
 `;
 
