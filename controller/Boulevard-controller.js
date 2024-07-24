@@ -2917,8 +2917,11 @@ const query = `
             name
             availableItems{
                 id ... on CartAvailablePurchasableItem{
-                    name
-                    id
+                   id
+                        name
+                        description
+                        
+                        
                 }
                 }
             }
@@ -3321,7 +3324,7 @@ export const getServices = async (req, res) => {
     try {
         const query = `
         query {
-            services(first: 20) {
+            services(first: 1000) {
                 edges {
                     node {
                         id
@@ -3364,12 +3367,22 @@ export const getServices = async (req, res) => {
             try {
                 // Step 1: Parse the JSON string inside the response body
                 const parsedData = JSON.parse(response.body);
+                const activeServices = parsedData.data.services.edges.filter(service => service.node.active);
 
+                // Construct the response object with the same structure
+                const result = {
+                    data: {
+                        services: {
+                            edges: activeServices,
+                            pageInfo: parsedData.data.services.pageInfo
+                        }
+                    }
+                };
 
                 let ress = {
                     status: true,
                     message: "Services fetched successfully",
-                    data: parsedData
+                    data: result
                 };
                 console.log("ress", ress);
                 return res.status(200).send(ress);
