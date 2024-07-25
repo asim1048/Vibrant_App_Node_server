@@ -1,4 +1,6 @@
 import express from 'express';
+import Stripe from 'stripe';
+const stripe = new Stripe('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');
 
 //Users
 import { signUp,sendOTpForSignUp,sendOTpForForgotPassword, logIn,userInfoByID, updatePassword, checkUser, usersList, deleteUser } from '../controller/user-controller.js';
@@ -186,6 +188,22 @@ route.get('/customServicesList',  customServicesList);
 
 route.post('/createWebAdmin',  createWebAdmin);
 route.post('/webAdminLogin',  webAdminLogin);
+
+
+// STRIPE----------------
+
+route.post('/create-payment-intent',  async(req,res)=>{
+    try{
+        const paymentIntent = await stripe.paymentIntents.create({
+            payment_method_types: ['card'],
+            amount: 1099,
+            currency: 'usd',
+          });
+          res.status(200).json(paymentIntent)
+    }catch(error){
+        res.status(505).send(json.stringify(error))
+    }
+});
 
 
 export default route;

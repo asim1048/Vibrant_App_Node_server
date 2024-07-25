@@ -969,7 +969,7 @@ export const getStafsList = async (req, res) => {
 };
 export const getAllStafs = async (req, res) => {
     try {
-        const { locationId, role,  } = req.body;
+        const { locationId, role, } = req.body;
 
         const query = `
         query GetStaff($first: Int!) {
@@ -1043,7 +1043,7 @@ export const getAllStafs = async (req, res) => {
                 // Define the location ID to filter by
 
                 // Filter staff whose role is "Esthetician" and belong to the specified location
-                const filteredStaff = parsedData.data.staff.edges.filter(edge => 
+                const filteredStaff = parsedData.data.staff.edges.filter(edge =>
                     edge.node.role.name === role &&
                     edge.node.locations.some(location => location.id === locationId)
                 );
@@ -2258,7 +2258,7 @@ export const updateClient = async (req, res) => {
         };
 
 
-        
+
 
 
         // Send the mutation using fetch
@@ -2461,7 +2461,7 @@ export const getMyMemberships = async (req, res) => {
             }
         }`;
 
-        
+
 
         const options = {
             method: 'POST',
@@ -2554,7 +2554,7 @@ export const pauseMembership = async (req, res) => {
             }
         };
 
-        
+
 
         const options = {
             method: 'POST',
@@ -2585,7 +2585,7 @@ export const pauseMembership = async (req, res) => {
                 // Step 1: Parse the JSON string inside the response body
                 const parsedData = JSON.parse(response.body);
 
-               
+
                 let ress = {
                     status: true,
                     message: "Memberships Paused successfully",
@@ -2639,9 +2639,9 @@ export const unpauseMembership = async (req, res) => {
                 sendNotification: sendNotification || false,
             }
         };
-        
 
-        
+
+
 
         const options = {
             method: 'POST',
@@ -2672,7 +2672,7 @@ export const unpauseMembership = async (req, res) => {
                 // Step 1: Parse the JSON string inside the response body
                 const parsedData = JSON.parse(response.body);
 
-               
+
                 let ress = {
                     status: true,
                     message: "Memberships unpaused successfully",
@@ -2701,9 +2701,9 @@ export const unpauseMembership = async (req, res) => {
 };
 export const cancelMembership = async (req, res) => {
     try {
-        const { membershipId,  reason, reasonCustom, sendNotification } = req.body;
-          const cancelOn=getCurrentDateYMD();
-        if (!membershipId ||   !reason) {
+        const { membershipId, reason, reasonCustom, sendNotification } = req.body;
+        const cancelOn = getCurrentDateYMD();
+        if (!membershipId || !reason) {
             return res.status(400).json({
                 status: false,
                 message: "Missing required fields",
@@ -2729,9 +2729,9 @@ export const cancelMembership = async (req, res) => {
                 sendNotification: sendNotification || false,
             }
         };
-        
 
-        
+
+
 
         const options = {
             method: 'POST',
@@ -2762,7 +2762,7 @@ export const cancelMembership = async (req, res) => {
                 // Step 1: Parse the JSON string inside the response body
                 const parsedData = JSON.parse(response.body);
 
-               
+
                 let ress = {
                     status: true,
                     message: "Memberships cancelled successfully",
@@ -2884,29 +2884,29 @@ export const createMembershipCart = async (req, res) => {
         const { locationId } = req.body;
 
 
-//         const query = `
-//     mutation {
-//         createCart(input: {
-//             locationId: "${locationId}"
-//         }) {
-//             cart {
-//                 id
-//                 availableCategories {
-//                     name
-//                     availableItems {
-//                         name
-//                         id ... on CartAvailablePurchasableItem{
-//                           id
-//                           name
-//                         }
-                        
-//                     }
-//                 }
-//             }
-//         }
-//     }
-// `;
-const query = `
+        //         const query = `
+        //     mutation {
+        //         createCart(input: {
+        //             locationId: "${locationId}"
+        //         }) {
+        //             cart {
+        //                 id
+        //                 availableCategories {
+        //                     name
+        //                     availableItems {
+        //                         name
+        //                         id ... on CartAvailablePurchasableItem{
+        //                           id
+        //                           name
+        //                         }
+
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     }
+        // `;
+        const query = `
     mutation{
     createCart(input: {
         locationId: "${locationId}"      
@@ -2920,6 +2920,19 @@ const query = `
                    id
                         name
                         description
+                        listPriceRange{
+                        Min
+                        Max
+                        }
+                        vouchers{
+                        services{
+                        id
+                        name
+                        defaultPrice
+                        }
+                        }
+                        
+                        
                         
                         
                 }
@@ -3411,7 +3424,7 @@ export const getServices = async (req, res) => {
 export const clientEnrollmentinLoyality = async (req, res) => {
     try {
         const { id, locationId, locationName, name } = req.body;
-        console.log(typeof loyalityAuthToken(),loyalityAuthToken())
+        console.log(typeof loyalityAuthToken(), loyalityAuthToken())
 
         const mutation = `
             mutation EnrollClient($input: EnrollClientInput!) {
