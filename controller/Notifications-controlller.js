@@ -41,8 +41,8 @@ admin.initializeApp({
     credential: admin.credential.cert({
         "type": "service_account",
         "project_id": "vibrant-life-spa",
-        "private_key_id": "82f42b605d1a39fd0f19198c77077f831cc0a575",
-        "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCZE+2YyTJFsw9w\nQnA3PUPtlv5aewHskSizBOvin+CZKjNTU9ufcuzNx4S0qA7+h8ku11cSXYmL68mk\nj0D5HegqyYmoxjG6VjE92TkK9brB8qZ4hobs/vgXqPJld15TTQkNk1NVp6HENJe2\nKcWO+HIqEmBUk8lgPaV0ZrEVU1+55ewc7fdqtJlP2xuKJX5tV22Hp99Y4v9LlBlo\nxSnOU0zYCKJowxsSYNcuyQf38mPU2yG3ygid4Xp7wZag7VG0HpXu6qHLExekbLr0\n6BaR3Jp2j4bqlfKv7y5BO6xsnHAbAOLqA1E0N33m9hc5E91GOBCSIyGi2g8pyJ4o\n1IJuKVidAgMBAAECggEAB8ViN3JnUfCAJSPKTJOYojQbH37FHzxTQ5tJWkzhewUQ\na/eC27pa2St6yi0J7dP4257k9bK369mBeBAprTvecGWgzmeZWKtNfqVLZwoIfBYU\na2Pw75EWCSVzgMEpkbMEdaL4BQ4ogSxmU0IVnGdybD5Yk5KZE4CtqJYaAUolPuug\nCDMrWX1RIgmL4LTzXD33dc5mwokLs7c2jo0TbX1nVpcswolvXSSgZyE2pUdHCQnn\n/gCpQZIEPIqLzFJEFkYVuWI1qkPvsGnTaM0qvyTjBOMvxa0A6XQzVHq+TlwsPT7c\nfPpWO01g2iMvwhOc9PSMudV3gTi9O15kpsRjRl1LgQKBgQDS5ySao1f4/nWLLnn7\nmyzWmUfbE/wdN84+xWzcbhBaJdJrDvV7iiRn63RpGxHU8JkbdOQSi99gyA2YeNQR\ni/T4shNB20R0iwPapILfblYu4N80sa/ADouAVISwJQ02AVtt6bwx7uH6Vn61FPFI\nmjByBUnSKVBPHX/M0LjSX1K7PQKBgQC5z27BJJG/h+Y5d2JAyUraWn7AaE/lezHx\nR0TCcdF3Mqwl1ElcPJlERNJx42xsFm5rh4+bkFU3l1OhSvNI4yDrYQLYeZJQlgXc\nMAibYC/X3Ypps5GWs8VXOx4IbdeCoNVC2DPK430NaYdRuzqV3AFVk1/dALa6k5Wv\nebsKQgpo4QKBgQC+z/3gIvUPBDoY6L3YlHam2huW7KfnT3w8cqahcLs+tIWB8xDK\n6xsxImg6SBGEFQKRQtqupPo/OACE+Jz2GyhScdrWdKmkv7mG8dyuhcdXtoB7zl9y\nZjZ0rwM10u/28pdkBFsO2lB+DA+rif0bcNVv87TsfhB44/mitxzgyPmzCQKBgBOl\nI8+V3zcB1kyDG8c/wQM/CCGtpazcjpY088cfI4dXuy2wuSTgX1ABesKBygfPg1Mp\nHPzUkL306Omns/sj0GoycouSpu6QPgReq7pJvCU1jhnI2360eQvU+0Lm4h80g/ey\nRh+QV7tgSedRRUts3FNA5qTGG4u0aOIJm8Xk35bhAoGBALvOjp0hujSCzzpCZf0j\nL/83d6b74oL2lAfOUmvrxRkO03cqiDKa9CLbn947dKjXkwrgFfTuVp3cSH6Pg/6g\nxJdJIUwuCJUxhMEKD8JbIFuyMAvRhPrCWaLHhgl7sI8gb/Z6CG5gIk+R31fEhOLd\n2Cmaz8jNJLjR60wT0ozmDDfu\n-----END PRIVATE KEY-----\n",
+        "private_key_id": "6d3d131e93387eaa3492993584bff6fcb3fb78fa",
+        "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDK0Sazm3bq27lX\nguop7f4mquMBq5PD6hasUO4tA7cxxulRl9vj0fojvXfCUS3v5TS1bPlt4Z2Fh22m\ne+ai2oabbsXNJL7yxd21RAZme+wKtP88ECSYWjqzMRGo00fFEfiXiJNoPRNc4rcL\nRRQ8FNsI6UbdKxaW6KCU5befokETEHUWnAsW9k9FZ08ZOtwCL4feY1IbtKrdPHwH\nPtiTYTG3VoxsGbn5k0ln1QHtFTiSN3uZZtTuCqMRNwo57n21ISTzmL6ozevBh93F\nTQFJZ1PlR03PJslqUr7yCYbXVu/35PdPNuivJ5j4e+VJ5S39btF5FULQhhyPTonP\nMTaA5uGZAgMBAAECggEAGO9KUAoUvm6ZlIf4lIOZO7VGN/IZdlxtAa3oflnG18SR\n8lFWfCWYWHUGiHoVCPmXt5doegkjJeO+yBlTA2IU6v6dLGmwXSYU6iBtHgPtwuo6\nN+7vJNjw/w9REb26BOE+/BhTMR1TKFgKM4VAZduVizys1OujeRWsCmpMn0BiOj7T\nbgsNk3VERZlBg9F59wZ+1gFEuPH18oU45tcTZNDMc+F0Qo8jaFweFG0bRkaSQ0Tm\nvNqXxhnX2YCu9jZklthGZLkPbJIln3vD3MfK5IKfiIAHpKOMKlunxfkrtYW5ef+o\nMZEq5PAZa2wybt6jsLccVqbE6V9S+ZbCS86aOVHJIQKBgQDp+cIh9szQ5UwLMCv4\nSYIDAjEv71/2X2A+Mt33zxMLtTelqJ/diOTC/3hJa0Lz8k5JoBrC3ktul74RoyXC\n6JberaBfAG+ArUbcKTmLWcjRJic0hS3eWb6HQeHZHxNxqILlRW81JILF8GA6jjB0\nSFGMCFLprmmAJWs8g/F/s5Oa0QKBgQDd6IvLOixIR2Ly2yZkbJ+TQMzwOk4VeGHQ\n7Uv87cMurziPsLWmeXM/RnqMgXoM1kTHkzeSuf8uRJHwAXknS4IDlSgx2nCyf/Vw\noz5nYemq4SLPkCr7clE4hJ7N5DEAc52TEVKSoTXnFmLbqzzMODr8IfezSqFYkuox\nOooqD0r8SQKBgD3rmzTh29Js3HMZjIlo6r9hFSNadkr9crsDOzsZ0jCHBPMSbTxz\nvhbdBTho6o8k0RMrC+oGanAaOHLyekvawhKsYITD2L51HQum3VPDryGqtzVvCXSO\ny52AEgUj9EFgF0QV3Bh0USeRNeZJOwmLGgm1KjwtrD39qSOax47EN4wBAoGBALaE\nAQ7LLwbX6DOVOlOY3/sObkEbw4N3OwTLWBeVO1cXeS7+Cbn95GNjxYHxMICEb5ey\npx/AaXkVnu7HV22RdkMaGDBA2TaHdkkJi1ceukD44VfU3PVpRhJ1SeRQTllvvmfq\n9H5zp9EEoZTJl7zkdudPzNqjhGdEluicnG0RnPw5AoGALXrfJTBEdn4nVaxtDJcb\n4BtEu4jEqgIMKBfTZPrjUoYL+u0nKZ0twPsejKS77/j7PtF+vLNMV95YnUVuxc1Z\nbltEIp3aPXXmfGC4h18aZ+joydr3TKrdKx2s/onUZDTfTeipBD16WVglLCPbamQd\nOwr4N/GTuRO3RgjAGv3uZpw=\n-----END PRIVATE KEY-----\n",
         "client_email": "firebase-adminsdk-9m8d9@vibrant-life-spa.iam.gserviceaccount.com",
         "client_id": "112560602078692847479",
         "auth_uri": "https://accounts.google.com/o/oauth2/auth",
@@ -57,11 +57,11 @@ admin.initializeApp({
 
   export const sendNotifications = async (req, res) => {
     try {
-        const token ='cDEqeAP8SjS1aQ4d87vC3G:APA91bHNevOuIHO1U7Fr2-kBiOCAPhYAKOliEMSFsoui8KL6APmIJivUsYdbpFOV4j_wOVGw1ldsbPFXU9ZA-nyMPdk3ORqlElCkvHonKne-bmLu9evN7ShCk3mqVzptqHr4Lcp1MI0D';
+        const token ='dEEvoLDfQty3q7kqIyPOJw:APA91bGHtxFHpW1-zT1TsvF2xlroiP_6b0LPuzUmwQ1hAj1JbjWZt5ZU8Ag1uNSIbhr61vrXPvOzWEj3ChnngqXDSFRZexve4rXWhoTRsvz-MRbMERHN9kvO0PIe4xFt2-AhpItgjVAT';
 
         const response=  await admin.messaging().sendMulticast({
           tokens: [
-            "cMtN9tqWSHCpPmSOwHenQe:APA91bEfYbmo-qCd_XVybJXhaC-wsUjXYKGkHDZigdbs92F0f7LwpZXc1Gj6emkzmABkOuiLI1FpuLZ2J0QsJ9SzmjGuoPp8JBo2rKYrvAgY1qMwWvTdCC94jVLXIv5RXgTv9kfihuuc"
+            token
           ], // ['token_1', 'token_2', ...]
           notification: {
             title: 'Basic Notification',
@@ -103,7 +103,7 @@ export const sendNotificationsScheduled = async () => {
           },
           body: JSON.stringify({
               query: `query($locationId: ID!) {
-                  appointments(first: 18, locationId: $locationId) {
+                  appointments(first: 1000, locationId: $locationId) {
                       edges {
                           node {
                               id
@@ -248,6 +248,8 @@ export const userNotifications = async (request, response) => {
 export const addNotification = async (request, response) => {
     try {
         const {email,notificationType,appoinmentid, title, message } = request.body;
+        const deviceToken = await Devicetoken.findOne({ email: email });
+        console.log(deviceToken.token)
 
         
         const newNotification = new Notification({
@@ -259,10 +261,22 @@ export const addNotification = async (request, response) => {
         });
 
         await newNotification.save();
+
+        const firebaseresponse = await admin.messaging().sendMulticast({
+            tokens: [deviceToken.token],
+            notification: {
+                title: title,
+                body: message,
+                // imageUrl: 'https://my-cdn.com/app-logo.png',
+
+            },
+        });
+
         let res = {
             status: true,
             message: "Notification created successfully",
-            data: newNotification
+            data: newNotification,
+            firebaseresponse:firebaseresponse,
         };
         return response.status(200).json(res);
     } catch (error) {

@@ -17,6 +17,7 @@ import { sendNotifications ,userNotifications,addNotification} from '../controll
 import { addAppoinmentRating } from '../controller/appoinment-rating-controller.js';
 
 import { createOrUpdate,findCustomService ,customServicesList} from '../controller/service-controller.js';
+import { createWebAdmin,webAdminLogin } from '../controller/admin-controller.js';
 import upload from '../middleware/multer.js';
 
 
@@ -180,6 +181,11 @@ route.post('/addAppoinmentRating', addAppoinmentRating);
 route.post('/createOrUpdate',  createOrUpdate);
 route.post('/findCustomService',  findCustomService);
 route.get('/customServicesList',  customServicesList);
+
+//Create Web Admin
+
+route.post('/createWebAdmin',  createWebAdmin);
+route.post('/webAdminLogin',  webAdminLogin);
 
 
 export default route;
