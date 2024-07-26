@@ -1,6 +1,6 @@
 import express from 'express';
 import Stripe from 'stripe';
-const stripe = new Stripe('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');
+const stripe = new Stripe('sk_test_0LCkeYaoLBJUzPSBsgNLXxu6');
 
 //Users
 import { signUp,sendOTpForSignUp,sendOTpForForgotPassword, logIn,userInfoByID, updatePassword, checkUser, usersList, deleteUser } from '../controller/user-controller.js';
