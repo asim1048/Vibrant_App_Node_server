@@ -2924,13 +2924,7 @@ export const createMembershipCart = async (req, res) => {
                         Min
                         Max
                         }
-                        vouchers{
-                        services{
-                        id
-                        name
-                        defaultPrice
-                        }
-                        }
+                       
                         
                         
                         

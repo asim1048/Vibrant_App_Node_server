@@ -20,6 +20,8 @@ import { addAppoinmentRating } from '../controller/appoinment-rating-controller.
 
 import { createOrUpdate,findCustomService ,customServicesList} from '../controller/service-controller.js';
 import { createWebAdmin,webAdminLogin } from '../controller/admin-controller.js';
+import { createOrUpdateMembership,findCustomMembership,customMembershipList } from '../controller/membership-controller.js';
+
 import upload from '../middleware/multer.js';
 
 
@@ -184,8 +186,12 @@ route.post('/createOrUpdate',  createOrUpdate);
 route.post('/findCustomService',  findCustomService);
 route.get('/customServicesList',  customServicesList);
 
-//Create Web Admin
+//Custom Membership Handling
+route.post('/createOrUpdateMembership',  createOrUpdateMembership);
+route.post('/findCustomMembership',  findCustomMembership);
+route.get('/customMembershipList',  customMembershipList);
 
+//Create Web Admin
 route.post('/createWebAdmin',  createWebAdmin);
 route.post('/webAdminLogin',  webAdminLogin);
 
