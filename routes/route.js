@@ -210,10 +210,12 @@ route.post('/customAppointmentUserList',  customAppointmentUserList);
 
 route.post('/create-payment-intent',  async(req,res)=>{
     try{
+        const { currency, servicesTotal, tip } = req.body;
+
         const paymentIntent = await stripe.paymentIntents.create({
             payment_method_types: ['card'],
-            amount: 1099,
-            currency: 'usd',
+            amount: servicesTotal+tip,
+            currency: currency,
           });
           res.status(200).json(paymentIntent)
     }catch(error){
