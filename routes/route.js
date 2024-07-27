@@ -22,6 +22,8 @@ import { createOrUpdate,findCustomService ,customServicesList} from '../controll
 import { createWebAdmin,webAdminLogin } from '../controller/admin-controller.js';
 import { createOrUpdateMembership,findCustomMembership,customMembershipList } from '../controller/membership-controller.js';
 
+import { createOrUpdateAppoinment,findCustomAppoinment,customAppointmentList,customAppointmentUserList } from '../controller/appointment-controller.js';
+
 import upload from '../middleware/multer.js';
 
 
@@ -194,6 +196,12 @@ route.get('/customMembershipList',  customMembershipList);
 //Create Web Admin
 route.post('/createWebAdmin',  createWebAdmin);
 route.post('/webAdminLogin',  webAdminLogin);
+
+//Custom appointment lists
+route.post('/createOrUpdateAppoinment',  createOrUpdateAppoinment);
+route.post('/findCustomAppoinment',  findCustomAppoinment);
+route.get('/customAppointmentList',  customAppointmentList);
+route.post('/customAppointmentUserList',  customAppointmentUserList);
 
 
 // STRIPE----------------
