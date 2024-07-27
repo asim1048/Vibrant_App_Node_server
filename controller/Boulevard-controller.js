@@ -85,7 +85,7 @@ export const getlocationAppointments = async (req, res) => {
             },
             body: JSON.stringify({
                 query: `query($locationId: ID!) {
-                    appointments(first: 18, locationId: $locationId) {
+                    appointments(first: 1000, locationId: $locationId) {
                         edges {
                             node {
                                 id
@@ -169,6 +169,115 @@ export const getlocationAppointments = async (req, res) => {
                     status: true,
                     message: "Appointments fetched successfully",
                     data: simplifiedAppointments
+                };
+                console.log("ress", ress);
+                return res.status(200).send(ress);
+            } catch (parseError) {
+                let ress = {
+                    status: false,
+                    message: "Failed to parse response",
+                    error: parseError.message
+                };
+                return res.status(500).json(ress);
+            }
+        });
+    } catch (error) {
+        console.log(error);
+        let ress = {
+            status: false,
+            message: "Something went wrong in the backend",
+            error: error,
+        };
+        return res.status(500).json(ress);
+    }
+};
+export const getlocationAppointmentsAll = async (req, res) => {
+    try {
+        const { locationid } = req.body;
+
+        const options = {
+            method: 'POST',
+            url: 'https://dashboard.boulevard.io/api/2020-01/admin',
+            headers: {
+                'Authorization': generateAuthToken(),
+                'Content-Type': 'application/json',
+                'Cookie': '_sched_cookie=QTEyOEdDTQ.mHsjUNLA3eGUf6OmzUPJlNoEg227-wXF8K5Cb2FDnd5BWY7-PPIQNqdoe4g.NQZg_DkYRfNNTnUt.lS9dUheX7017zTzgniU528Sy5i5a-btIbuUHVfAwFkk_fKzLSuC2qCO1EyR-8thrXff1.u_QbKX6kddDkOr8fS2oY2g'
+            },
+            body: JSON.stringify({
+                query: `query($locationId: ID!) {
+                    appointments(first: 18, locationId: $locationId) {
+                        edges {
+                            node {
+                                id
+                                clientId
+                                state
+                                pendingFormCount
+                                client {
+                                    name
+                                    createdAt
+                                    email
+                                    mobilePhone
+                                    appointmentCount
+                                    notes {
+                                        createdAt
+                                        id
+                                        text
+                                    }
+                                    tags {
+                                        id
+                                        name
+                                        symbol
+                                    }
+                                }
+                                appointmentServices {
+                                    staffId
+                                    startAt
+                                    price
+                                    service {
+                                        name
+                                        id
+                                    }
+                                     staff {
+            firstName
+            lastName
+            email
+            mobilePhone
+            role {
+              name
+            }
+          }
+                                }
+                            }
+                        }
+                            
+                    }
+                }`,
+                variables: { locationId: locationid }
+            })
+        };
+
+        request(options, function (error, response) {
+            if (error) {
+                console.log("error", error)
+                let ress = {
+                    status: false,
+                    message: "Failed to fetch appointments",
+                };
+                return res.status(200).json(ress);
+            }
+
+            try {
+                // Step 1: Parse the JSON string inside the response body
+                const parsedData = JSON.parse(response.body);
+
+                // Step 2: Navigate to the appointments array
+               
+
+                // Now `simplifiedAppointments` contains the array of simplified appointment nodes
+                let ress = {
+                    status: true,
+                    message: "Appointments fetched successfully",
+                    data: parsedData
                 };
                 console.log("ress", ress);
                 return res.status(200).send(ress);

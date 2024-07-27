@@ -6,7 +6,7 @@ const stripe = new Stripe('sk_test_0LCkeYaoLBJUzPSBsgNLXxu6');
 import { signUp,sendOTpForSignUp,sendOTpForForgotPassword, logIn,userInfoByID, updatePassword, checkUser, usersList, deleteUser } from '../controller/user-controller.js';
 
 //Boulevard
-import { getlocationAppointments,cancelAppointment,getAvailableRescheduleDates,getAvailableRescheduleTimes,rescheduleAppointment,appoinmentCheckinArrived,getlocations,getAppoinmentManageURL,locationServices,createAppoinmentCart,addClientInfoToAppoinmentCart,addItemtoAppoinmentCart ,appointmentAvailableTimeSlots,addSelectedTimeToCart,addPaymentMethodToAppoinmentCart,addPaymentTokenToCart,checkoutAppoinmentCart} from '../controller/Boulevard-controller.js';
+import { getlocationAppointments,getlocationAppointmentsAll,cancelAppointment,getAvailableRescheduleDates,getAvailableRescheduleTimes,rescheduleAppointment,appoinmentCheckinArrived,getlocations,getAppoinmentManageURL,locationServices,createAppoinmentCart,addClientInfoToAppoinmentCart,addItemtoAppoinmentCart ,appointmentAvailableTimeSlots,addSelectedTimeToCart,addPaymentMethodToAppoinmentCart,addPaymentTokenToCart,checkoutAppoinmentCart} from '../controller/Boulevard-controller.js';
 import {createCartforUser, sendOTPforLoginViaNumber ,sendOTPforLoginViaEmail,verifyLoginUsingOTP,createClient,getClientInfo,updateClient} from '../controller/Boulevard-controller.js';
 import { cartItemswithAdons ,getStafsList,getAllStafs,addStaffToCart} from '../controller/Boulevard-controller.js';
 import { getMemberships,getMyMemberships,pauseMembership,unpauseMembership,cancelMembership } from '../controller/Boulevard-controller.js';
@@ -111,6 +111,8 @@ route.post('/uploadDP', upload.single('image'), async (request, response) => {
 // Boulevard 
 
 route.post('/getlocationAppoinments', getlocationAppointments)
+route.post('/getlocationAppointmentsAll', getlocationAppointmentsAll)
+
 route.post('/cancelAppointment', cancelAppointment)
 route.post('/getAvailableRescheduleDates', getAvailableRescheduleDates)
 route.post('/getAvailableRescheduleTimes', getAvailableRescheduleTimes)
