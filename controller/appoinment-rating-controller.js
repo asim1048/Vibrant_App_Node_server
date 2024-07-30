@@ -46,3 +46,28 @@ export const addAppoinmentRating = async (request, response) => {
         return response.status(500).json(res);
     }
 }
+export const customRatingsList = async (request, response) => {
+    try {
+        // Find all questions
+        const ratings = await AppoinmentRating.find();
+
+        if (ratings.length === 0) {
+            return response.status(200).json({
+                status: false,
+                message: "No Rating exist"
+            });
+        }
+
+        return response.status(200).json({
+            status: true,
+            message: "All ratings retrieved successfully",
+            data: ratings
+        });
+    } catch (error) {
+        return response.status(500).json({
+            status: false,
+            message: "Something went wrong in the backend",
+            error: error.message
+        });
+    }
+};

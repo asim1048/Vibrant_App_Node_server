@@ -16,7 +16,7 @@ import { clientEnrollmentinLoyality } from '../controller/Boulevard-controller.j
 import { addToken } from '../controller/device-token-controller.js';
 
 import { sendNotifications ,userNotifications,addNotification} from '../controller/Notifications-controlller.js';
-import { addAppoinmentRating } from '../controller/appoinment-rating-controller.js';
+import { addAppoinmentRating,customRatingsList } from '../controller/appoinment-rating-controller.js';
 
 import { createOrUpdate,findCustomService ,customServicesList} from '../controller/service-controller.js';
 import { createWebAdmin,webAdminLogin } from '../controller/admin-controller.js';
@@ -184,6 +184,7 @@ route.post('/addToken', addToken)
 
 //custom appoinmentRating
 route.post('/addAppoinmentRating', addAppoinmentRating);
+route.get('/customRatingsList', customRatingsList);
 
 //custom service handling
 route.post('/createOrUpdate',  createOrUpdate);
@@ -211,6 +212,7 @@ route.post('/customAppointmentUserList',  customAppointmentUserList);
 route.post('/create-payment-intent',  async(req,res)=>{
     try{
         const { currency, servicesTotal, tip } = req.body;
+        console.log("currency",currency)
 
         const paymentIntent = await stripe.paymentIntents.create({
             payment_method_types: ['card'],
@@ -219,6 +221,7 @@ route.post('/create-payment-intent',  async(req,res)=>{
           });
           res.status(200).json(paymentIntent)
     }catch(error){
+        console.log(error)
         res.status(505).send(json.stringify(error))
     }
 });
