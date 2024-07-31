@@ -180,7 +180,9 @@ export const sendNotificationsScheduled = async () => {
                         id: appointment.id,
                         title: `Appoinment for ${service.service.name}`,
                         message: message,
-                        email: email
+                        email: email,
+                        appointmentState:appointment.state,
+                        isFutureAppointment
                     };
                 });
                 
@@ -188,7 +190,7 @@ export const sendNotificationsScheduled = async () => {
 
 
             for (const notification of notifications) {
-              const { email, title, message,id } = notification;
+              const { email, title, message,id ,appointmentState,isFutureAppointment} = notification;
 
               const userToken = devicetokens.find(token => token.email === email);
               const notificationn=await Notification.findOneAndUpdate(
@@ -197,7 +199,7 @@ export const sendNotificationsScheduled = async () => {
                 { upsert: true, new: true } // Options: create if not exists, return the new document
               );
              await notificationn.save();
-              if (userToken) {
+              if (userToken && appointmentState=="CONFIRMED" && isFutureAppointment) {
                   const response = await admin.messaging().sendMulticast({
                       tokens: [userToken.token],
                       notification: {
