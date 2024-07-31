@@ -108,6 +108,7 @@ export const sendNotificationsScheduled = async () => {
                           node {
                               id
                               clientId
+                              state
                               client {
                                   name
                                   createdAt
@@ -159,7 +160,8 @@ export const sendNotificationsScheduled = async () => {
                   client: appointment.client,
                   services: appointment.appointmentServices,
                   clientid:appointment.clientId,
-                  id:appointment.id
+                  id:appointment.id,
+                  state:appointment.state
               }));
 
               const notifications = simplifiedAppointments.map(appointment => {
@@ -199,7 +201,8 @@ export const sendNotificationsScheduled = async () => {
                 { upsert: true, new: true } // Options: create if not exists, return the new document
               );
              await notificationn.save();
-              if (userToken && appointmentState=="CONFIRMED" && isFutureAppointment) {
+             console.log(appointmentState,isFutureAppointment)
+              if (userToken && appointmentState=="BOOKED" && isFutureAppointment) {
                   const response = await admin.messaging().sendMulticast({
                       tokens: [userToken.token],
                       notification: {
