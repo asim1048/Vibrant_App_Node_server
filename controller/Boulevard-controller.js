@@ -3279,7 +3279,7 @@ export const addPaymentMethodToMembershipCart = async (req, res) => {
     try {
         const { cardDetails, cartId } = req.body;
 
-        const tokenizationUrl = 'https://vault-sandbox.joinblvd.com/cards/tokenize';
+        const tokenizationUrl = 'https://pci.boulevard.app/cards/tokenize';
         const tokenizationResponse = await axios.post(tokenizationUrl, { card: cardDetails });
         const dataa = tokenizationResponse.data;
         console.log("cardDetails", tokenizationResponse)
