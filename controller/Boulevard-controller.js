@@ -9,6 +9,11 @@ const SECRET_KEY = 'ODFue3QbsLKGq+9g/ZXuzoGmQe6uBeqFVD/9pGi/b98=';
 const BUSINESS_ID = '49fcc618-b077-49cc-8666-3efc31348cac';
 let http_basic_header = "";
 let http_basic_header1 = ""
+
+const getClientAPIUrl=()=>{
+    return `https://dashboard.boulevard.io/api/2020-01/${BUSINESS_ID}/client`;
+  // return `https://sandbox.joinblvd.com/api/2020-01/${BUSINESS_ID}/client`
+}
 const generateAuthClientHeaderToken = () => {
     // Concatenate the API_KEY with a colon
     const httpBasicPayload = `${API_KEY}:`;
@@ -858,7 +863,7 @@ export const createAppoinmentCart = async (req, res) => {
 
         const options = {
             method: 'POST',
-            url: `https://dashboard.boulevard.io/api/2020-01/${BUSINESS_ID}/client`,
+            url: getClientAPIUrl(),
             headers: {
                 'Authorization': generateAuthClientHeaderToken(),
                 'Content-Type': 'application/json',
@@ -937,7 +942,7 @@ export const cartItemswithAdons = async (req, res) => {
         const variables = { id: cartid };
         const options = {
             method: 'POST',
-            url: `https://dashboard.boulevard.io/api/2020-01/${BUSINESS_ID}/client`,
+            url: getClientAPIUrl(),
             headers: {
                 'Authorization': generateAuthClientHeaderToken(),
                 'Content-Type': 'application/json',
@@ -1018,7 +1023,7 @@ export const getStafsList = async (req, res) => {
 
         const options = {
             method: 'POST',
-            url: `https://dashboard.boulevard.io/api/2020-01/${BUSINESS_ID}/client`,
+            url: getClientAPIUrl(),
             headers: {
                 'Authorization': generateAuthClientHeaderToken(),
                 'Content-Type': 'application/json',
@@ -1205,7 +1210,7 @@ export const addStaffToCart = async (req, res) => {
 
         const options = {
             method: 'POST',
-            url: `https://dashboard.boulevard.io/api/2020-01/${BUSINESS_ID}/client`,
+            url: getClientAPIUrl(),
             headers: {
                 'Authorization': generateAuthClientHeaderToken(),
                 'Content-Type': 'application/json',
@@ -1287,7 +1292,7 @@ export const addClientInfoToAppoinmentCart = async (req, res) => {
 
         const options = {
             method: 'POST',
-            url: `https://dashboard.boulevard.io/api/2020-01/${BUSINESS_ID}/client`,
+            url: getClientAPIUrl(),
             headers: {
                 'Authorization': generateAuthClientHeaderToken(),
                 'Content-Type': 'application/json',
@@ -1354,6 +1359,21 @@ export const addItemtoAppoinmentCart = async (req, res) => {
             }) {
                 cart {
                     id
+                      selectedItems{
+
+                id
+
+                item{
+
+                    name
+
+              
+
+                }
+
+ 
+
+            }
                 }
             }
         }
@@ -1362,7 +1382,7 @@ export const addItemtoAppoinmentCart = async (req, res) => {
 
         const options = {
             method: 'POST',
-            url: `https://dashboard.boulevard.io/api/2020-01/${BUSINESS_ID}/client`,
+            url: getClientAPIUrl(),
             headers: {
                 'Authorization': generateAuthClientHeaderToken(),
                 'Content-Type': 'application/json',
@@ -1435,7 +1455,7 @@ export const appointmentAvailableTimeSlots = async (req, res) => {
 
         const options = {
             method: 'POST',
-            url: `https://dashboard.boulevard.io/api/2020-01/${BUSINESS_ID}/client`,
+            url: getClientAPIUrl(),
             headers: {
                 'Authorization': generateAuthClientHeaderToken(),
                 'Content-Type': 'application/json',
@@ -1507,7 +1527,7 @@ export const addSelectedTimeToCart = async (req, res) => {
 
         const options = {
             method: 'POST',
-            url: `https://dashboard.boulevard.io/api/2020-01/${BUSINESS_ID}/client`,
+            url: getClientAPIUrl(),
             headers: {
                 'Authorization': generateAuthClientHeaderToken(),
                 'Content-Type': 'application/json',
@@ -1564,7 +1584,7 @@ export const addPaymentMethodToAppoinmentCart = async (req, res) => {
     try {
         const { cardDetails, cartId } = req.body;
 
-        const tokenizationUrl = 'https://vault-sandbox.joinblvd.com/cards/tokenize';
+        const tokenizationUrl = 'https://pci.boulevard.app/cards/tokenize'//'https://vault-sandbox.joinblvd.com/cards/tokenize';
         const tokenizationResponse = await axios.post(tokenizationUrl, { card: cardDetails });
         const dataa = tokenizationResponse.data;
         console.log("cardDetails", tokenizationResponse)
@@ -1611,7 +1631,7 @@ export const addPaymentTokenToCart = async (req, res) => {
 
         const options = {
             method: 'POST',
-            url: `https://dashboard.boulevard.io/api/2020-01/${BUSINESS_ID}/client`,
+            url: getClientAPIUrl(),
             headers: {
                 'Authorization': generateAuthClientHeaderToken(),
                 'Content-Type': 'application/json',
@@ -1687,7 +1707,7 @@ export const checkoutAppoinmentCart = async (req, res) => {
 
         const options = {
             method: 'POST',
-            url: `https://dashboard.boulevard.io/api/2020-01/${BUSINESS_ID}/client`,
+            url: getClientAPIUrl(),
             headers: {
                 'Authorization': generateAuthClientHeaderToken(),
                 'Content-Type': 'application/json',
@@ -3554,6 +3574,7 @@ export const clientEnrollmentinLoyality = async (req, res) => {
             method: 'POST',
             url: 'https://loyalty.blvd.co/api/2020-10/',
             headers: {
+                'Accept': 'Application/Json',
                 'Authorization': loyalityAuthToken(),
                 'Content-Type': 'application/json',
                 'Cookie': '_sched_cookie=QTEyOEdDTQ.mHsjUNLA3eGUf6OmzUPJlNoEg227-wXF8K5Cb2FDnd5BWY7-PPIQNqdoe4g.NQZg_DkYRfNNTnUt.lS9dUheX7017zTzgniU528Sy5i5a-btIbuUHVfAwFkk_fKzLSuC2qCO1EyR-8thrXff1.u_QbKX6kddDkOr8fS2oY2g'
