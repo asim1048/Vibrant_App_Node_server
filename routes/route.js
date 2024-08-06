@@ -6,7 +6,7 @@ const stripe = new Stripe('sk_test_0LCkeYaoLBJUzPSBsgNLXxu6');
 import { signUp,sendOTpForSignUp,sendOTpForForgotPassword, logIn,userInfoByID, updatePassword, checkUser, usersList, deleteUser } from '../controller/user-controller.js';
 
 //Boulevard
-import { getlocationAppointments,getlocationAppointmentsAll,cancelAppointment,getAvailableRescheduleDates,getAvailableRescheduleTimes,rescheduleAppointment,appoinmentCheckinArrived,getlocations,getAppoinmentManageURL,locationServices,createAppoinmentCart,addClientInfoToAppoinmentCart,addItemtoAppoinmentCart ,appointmentAvailableTimeSlots,addSelectedTimeToCart,addPaymentMethodToAppoinmentCart,addPaymentTokenToCart,checkoutAppoinmentCart} from '../controller/Boulevard-controller.js';
+import { getlocationAppointments,getClientAppointments,getlocationAppointmentsAll,cancelAppointment,getAvailableRescheduleDates,getAvailableRescheduleTimes,rescheduleAppointment,appoinmentCheckinArrived,getlocations,getAppoinmentManageURL,locationServices,createAppoinmentCart,addClientInfoToAppoinmentCart,addItemtoAppoinmentCart ,appointmentAvailableTimeSlots,addSelectedTimeToCart,addPaymentMethodToAppoinmentCart,addPaymentTokenToCart,checkoutAppoinmentCart} from '../controller/Boulevard-controller.js';
 import {createCartforUser, sendOTPforLoginViaNumber ,sendOTPforLoginViaEmail,verifyLoginUsingOTP,createClient,getClientInfo,updateClient} from '../controller/Boulevard-controller.js';
 import { cartItemswithAdons ,getStafsList,getAllStafs,addStaffToCart} from '../controller/Boulevard-controller.js';
 import { getMemberships,getMyMemberships,pauseMembership,unpauseMembership,cancelMembership } from '../controller/Boulevard-controller.js';
@@ -16,13 +16,15 @@ import { clientEnrollmentinLoyality } from '../controller/Boulevard-controller.j
 import { addToken } from '../controller/device-token-controller.js';
 
 import { sendNotifications ,userNotifications,addNotification} from '../controller/Notifications-controlller.js';
-import { addAppoinmentRating,customRatingsList } from '../controller/appoinment-rating-controller.js';
+import { addAppoinmentRating,appoinmentRatingCheck,customRatingsList } from '../controller/appoinment-rating-controller.js';
 
 import { createOrUpdate,findCustomService ,customServicesList} from '../controller/service-controller.js';
 import { createWebAdmin,webAdminLogin } from '../controller/admin-controller.js';
 import { createOrUpdateMembership,findCustomMembership,customMembershipList } from '../controller/membership-controller.js';
 
-import { createOrUpdateAppoinment,findCustomAppoinment,customAppointmentList,customAppointmentUserList } from '../controller/appointment-controller.js';
+import { createOrUpdateAppoinmentPayment,customAppointmentPaymentList,customAppointmentPaymentUserList } from '../controller/appointment-payment-controller.js';
+
+import {addAppoinmentTip,appoinmentTipCheck,customTipsList} from '../controller/appointmentTip-controller.js'
 
 import upload from '../middleware/multer.js';
 
@@ -111,6 +113,7 @@ route.post('/uploadDP', upload.single('image'), async (request, response) => {
 // Boulevard 
 
 route.post('/getlocationAppoinments', getlocationAppointments)
+route.post('/getClientAppointments', getClientAppointments)
 route.post('/getlocationAppointmentsAll', getlocationAppointmentsAll)
 
 route.post('/cancelAppointment', cancelAppointment)
@@ -184,7 +187,14 @@ route.post('/addToken', addToken)
 
 //custom appoinmentRating
 route.post('/addAppoinmentRating', addAppoinmentRating);
+route.post('/appoinmentRatingCheck', appoinmentRatingCheck);
 route.get('/customRatingsList', customRatingsList);
+
+
+//custom appoinment Tip
+route.post('/addAppoinmentTip', addAppoinmentTip);
+route.post('/appoinmentTipCheck', appoinmentTipCheck);
+route.get('/customTipsList', customTipsList);
 
 //custom service handling
 route.post('/createOrUpdate',  createOrUpdate);
@@ -201,10 +211,9 @@ route.post('/createWebAdmin',  createWebAdmin);
 route.post('/webAdminLogin',  webAdminLogin);
 
 //Custom appointment lists
-route.post('/createOrUpdateAppoinment',  createOrUpdateAppoinment);
-route.post('/findCustomAppoinment',  findCustomAppoinment);
-route.get('/customAppointmentList',  customAppointmentList);
-route.post('/customAppointmentUserList',  customAppointmentUserList);
+route.post('/createOrUpdateAppoinmentPayment',  createOrUpdateAppoinmentPayment);
+route.get('/customAppointmentPaymentList',  customAppointmentPaymentList);
+route.post('/customAppointmentPaymentUserList',  customAppointmentPaymentUserList);
 
 
 // STRIPE----------------

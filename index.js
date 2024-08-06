@@ -24,7 +24,7 @@ function callEveryMinute() {
 }
 
 // Schedule the function to run every minute
-const job = schedule.scheduleJob('0 * * * *', sendNotificationsScheduled);
+// const job = schedule.scheduleJob('0 * * * *', sendNotificationsScheduled);
 
 // Get the directory path using import.meta.url
 const __filename = fileURLToPath(import.meta.url);

@@ -5,9 +5,6 @@ const appoinmentRatingSchema = mongoose.Schema({
     appoinmentid: {
         type: String,
     },
-    tip:{
-        type: String,
-    },
     issue: {
         type: String,
     },
